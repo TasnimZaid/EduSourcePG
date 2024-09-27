@@ -25,7 +25,7 @@ function Login() {
       // Store the JWT token (if needed) in localStorage or state for authentication
       localStorage.setItem("token", response.data.token);
 
-      navigate("/dashboard"); // Redirect to the dashboard or home page
+      navigate("/MainResourcesPage"); // Redirect to the dashboard or home page
     } catch (error) {
       setError(error.response?.data?.message || "Login failed");
     }

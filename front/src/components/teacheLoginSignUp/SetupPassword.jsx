@@ -17,7 +17,7 @@ function SetupPassword() {
     try {
       await axios.post("http://localhost:3000/api/setup-password", formData);
       alert("Password set successfully.");
-      navigate("/dashboard");
+      navigate("/MainResourcesPage");
     } catch (error) {
       setError(error.response.data.message || "Password setup failed");
     }

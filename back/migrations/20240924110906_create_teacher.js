@@ -5,10 +5,11 @@ exports.up = function(knex) {
         table.string('email').notNullable().unique();
         table.string('password').notNullable(); 
         table.enu("gender", ["male", "female"]);
-        table.string('school_name').nullable();  // Add school name field
-        table.string('university_name').notNullable();  // Add university name field
-        table.string('certificate_img').nullable();  // Add certificate image URL
-        table.string('teacher_img').nullable();  // Add teacher profile image URL
+        table.string('school_name').nullable();  
+        table.string('university_name').notNullable();  
+        table.string('certificate_img').nullable();  
+        table.string('teacher_img').nullable(); 
+        table.string('grade').nullable();
         table.boolean("isActivate").defaultTo(true);
         table.string("otp").nullable();
     });

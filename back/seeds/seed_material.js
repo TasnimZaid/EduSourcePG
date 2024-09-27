@@ -27,7 +27,6 @@ exports.seed = function(knex) {
         { name: 'Foreign Languages' },
         { name: 'Engineering' },
         { name: 'Literature' },
-        // Add more materials as needed
       ]);
     });
 };

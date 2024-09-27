@@ -3,12 +3,16 @@ exports.up = function(knex) {
         // Create quizzes table
         .createTable('quizzes', function(table) {
             table.increments('id').primary();
-            table.string('title').notNullable(); // Quiz title
-            table.string('quiz_img').nullable(); // Optional quiz image
+            table.string('title').notNullable(); 
+            table.string('quiz_img').nullable(); 
+            table.string('grade').nullable();
             table.integer('teacher_id').unsigned().notNullable()
-                .references('id').inTable('teacher') // Reference to teacher
+                .references('id').inTable('teacher') 
                 .onDelete('CASCADE');
-            table.enu('subject', [
+            table.integer('material_id').unsigned().notNullable() 
+                .references('id').inTable('materials') 
+                .onDelete('CASCADE');
+            table.enu('subject', [  
                 'Math', 
                 'Science', 
                 'English', 
@@ -32,10 +36,9 @@ exports.up = function(knex) {
                 'Foreign Languages',
                 'Engineering',
                 'Literature'
-            ]).notNullable(); // Subject enum
-            table.timestamps(true, true); // Timestamps for quiz creation/update
+            ]).notNullable(); 
+            table.timestamps(true, true); 
         })
-        
         // Create questions table
         .createTable('questions', function(table) {
             table.increments('id').primary();
@@ -46,6 +49,7 @@ exports.up = function(knex) {
             table.string('question_img').nullable(); // Optional image for the question
             table.boolean('has_choices').defaultTo(false); // Flag for choices
             table.json('choices').nullable(); // Store choices as JSON (for flexibility)
+            table.json('choices_images').nullable(); // Store choice images as JSON
             table.string('correct_answer').nullable(); // Store the correct answer
             table.timestamps(true, true); // Timestamps for question creation/update
         });
