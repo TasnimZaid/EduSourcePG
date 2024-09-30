@@ -20,10 +20,11 @@ router.post('/addQuizToClass' , classController.addQuizToClass )
 router.get('/:teacher_id/getTeacherClassWitQuizzes', classController.getClassStudentsByTeacherId );
 
 // Fetch quizzes for a teacher by teacherId
-router.get('/teacher/:teacherId/quizzes', classController.getTeacherQuizzes);
+router.get('/:teacher_id/getQuizzesForTeacher', classController.getQuizzesForTeacher );
+
 
 // Fetch quizzes for a student by studentId
-router.get('/student/:studentId/quizzes', classController.getStudentQuizzes);
+router.get('/student/:studentId/getStudentQuizzes', classController.getStudentQuizzes);
 
 
 module.exports = router;

@@ -4,6 +4,7 @@ import QuizCard from './QuizCard';
 import QuizAnswer from './QuizAnswer';
 import { Book, MessageSquare, FileText, Video, Share2, MoreHorizontal, Play, Save, Sparkles } from 'lucide-react';
 import QuizForm from './QuizForm';
+import AddQuizToClass from './AddQuizToClass'; // Import the modal component
 
 const NavButton = ({ icon: Icon, text, isActive, onClick, color }) => (
   <button
@@ -25,6 +26,7 @@ const QuizPlatform = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [showAddToClassModal, setShowAddToClassModal] = useState(false); // Modal state
 
   useEffect(() => {
     fetchQuizzes();
@@ -56,6 +58,18 @@ const QuizPlatform = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const openAddToClassModal = () => {
+    if (selectedQuiz) {
+      setShowAddToClassModal(true);
+    } else {
+      alert("Please select a quiz first.");
+    }
+  };
+
+  const closeAddToClassModal = () => {
+    setShowAddToClassModal(false);
   };
 
   const tabs = [
@@ -125,58 +139,37 @@ const QuizPlatform = () => {
                   <Save size={18} className="mr-2" /> 
                   {saving ? 'Saving...' : 'Save Quiz'}
                 </button>
-                <button className="border border-[#D1D5DB] text-[#374151] px-4 py-2 rounded-md flex items-center hover:bg-[#F3F4F6] transition-colors duration-200">
-                  <Sparkles size={18} className="mr-2" /> Improve with AI
+                <button 
+                  className="border border-[#D1D5DB] text-[#374151] px-4 py-2 rounded-md flex items-center hover:bg-[#F3F4F6] transition-colors duration-200"
+                  onClick={openAddToClassModal}
+                >
+                  Assign to Class
                 </button>
                 <button className="border border-[#D1D5DB] text-[#374151] p-2 rounded-md hover:bg-[#F3F4F6] transition-colors duration-200">
                   <MoreHorizontal size={18} />
                 </button>
               </div>
-              <div className="flex justify-between items-center mb-6">
-                <span className="font-semibold text-[#374151]">{selectedQuiz.questions.length} Questions</span>
-                <div className="flex items-center">
-                  <span className="mr-2 text-sm text-[#6B7280]">Show Answers</span>
-                  <button 
-                    className={`w-12 h-6 rounded-full ${showAnswers ? 'bg-[#10B981]' : 'bg-[#D1D5DB]'} transition-colors duration-200 ease-in-out relative`}
-                    onClick={() => setShowAnswers(!showAnswers)}
-                  >
-                    <span className={`absolute w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ease-in-out ${showAnswers ? 'translate-x-6' : 'translate-x-1'}`} />
-                  </button>
-                </div>
-              </div>
-              <div className="border-t border-[#E5E7EB] pt-4 overflow-y-auto">
-              {selectedQuiz.questions.map((question, index) => (
-                <div key={question.question_id} className="mb-6">
-                  <h3 className="font-semibold mb-2 text-[#111827]">Question {index + 1}</h3>
-                  <p className="text-[#374151] mb-2">{question.question_text}</p>
-                  {question.question_img && (
-                    <img src={question.question_img} alt="Question" className="mb-4 w-20 h-auto rounded-lg shadow-sm " />
-                  )}
-                  {showAnswers && question.choices.map((choice, choiceIndex) => (
-                    <QuizAnswer 
-                      key={choiceIndex} 
-                      text={choice} 
-                      isCorrect={choice === question.correct_answer}
-                      image={question.choices_images && question.choices_images[choiceIndex] ? question.choices_images[choiceIndex] : null}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="text-center text-[#6B7280]">Select a quiz to view details</div>
-        )}
+
+              {/* Other content */}
+            </>
+          ) : (
+            <div className="text-center text-[#6B7280]">Select a quiz to view details</div>
+          )}
+        </div>
       </div>
-    </div>
+
+      {/* Add Quiz to Class Modal */}
+      {showAddToClassModal && (
+        <AddQuizToClass 
+          quizId={selectedQuiz.quiz_id} 
+          onClose={closeAddToClassModal} 
+        />
+      )}
     </div>
   );
 };
 
 export default QuizPlatform;
-
-
-
 
 
 // import React, { useState, useEffect } from 'react';

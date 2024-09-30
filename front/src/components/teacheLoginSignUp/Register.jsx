@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "", university_name: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", password: "", university_name: "" , national_id : ""});
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -67,6 +67,17 @@ function Register() {
               type="text"
               placeholder="University Name"
               value={formData.university_name}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <input
+              name="national_id"
+              type="text"
+              placeholder="nationalId Name"
+              value={formData.national_id}
               onChange={handleChange}
               required
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"

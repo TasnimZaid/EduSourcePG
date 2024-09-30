@@ -30,3 +30,5 @@ exports.seed = function(knex) {
       ]);
     });
 };
+
+              

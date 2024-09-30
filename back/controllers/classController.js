@@ -12,28 +12,43 @@ exports.createClass = async (req, res, next) => {
     }
 };
 
-
-// Add a student to a class
+// Add a student to a class by national_id
 exports.addStudentToClass = async (req, res, next) => {
-    const { class_id, student_id } = req.body;
+    console.log(req.body); // Log the incoming request body
+
+    const { class_id, national_id, teacher_id } = req.body; // Changed here to accept teacher_id
+
+    // Check for missing fields
+    if (!class_id || !national_id || !teacher_id) {
+        return res.status(400).json({ message: 'Class ID, National ID, and Teacher ID are required.' });
+    }
 
     try {
-        const id = await knex('class_students').insert({ class_id, student_id });
-        res.status(201).json({ message: 'Student added to class', id });
+        // Check if the student exists by national_id
+        const student = await knex('student').select('id', 'name').where({ national_id }).first();
+        
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        // Insert the student into the class
+        const id = await knex('class_students').insert({ class_id, student_id: student.id });
+        res.status(201).json({ message: 'Student added to class', id, student_name: student.name });
     } catch (error) {
+        console.error('Error in addStudentToClass:', error); // Log the error for debugging
         next(error); 
     }
 };
 
-// get the calss by id of teacher teacher profile
-
+// Get classes by teacher id to make list for add student to a class by national_id
 exports.getTeacherClasses = async (req, res, next) => {
-    const { teacher_id  } = req.params;
+    const { teacher_id } = req.params;
 
     try {
         const classes = await knex('classes').where({ teacher_id });
         res.status(200).json(classes);
     } catch (error) {
+        console.error('Error in getTeacherClasses:', error); // Log the error for debugging
         next(error); // Pass error to the error-handling middleware
     }
 };
@@ -81,27 +96,40 @@ exports.addQuizToClass = async(req , res , next)=>{
     }
 }
 
-
-
-
-
-// Fetch quizzes for teacher profile
-const getClassQuizzesForTeacher = async (teacherId) => {
-    return knex('quizzes')
-      .join('class_quizzes', 'quizzes.id', 'class_quizzes.quiz_id')
-      .join('classes', 'class_quizzes.class_id', 'classes.id')
-      .where('classes.teacher_id', teacherId)
-      .select(
-        'quizzes.id as quiz_id',
-        'quizzes.title',
-        'quizzes.quiz_img',
-        'quizzes.grade',
-        'quizzes.subject',
-        'classes.name as class_name',
-        'class_quizzes.created_at as assigned_date'
-      );
-  };
   
+
+// جلب الكويزات للصفوف المرتبطة بالمعلم مع أسماء الطلاب
+exports.getQuizzesForTeacher = async (req, res, next) => {
+    const { teacher_id } = req.params; // الحصول على معرف المعلم من المعاملات
+
+    try {
+        // جلب الصفوف الخاصة بالمعلم
+        const classes = await knex('classes')
+            .select('classes.id as class_id', 'classes.name as class_name')
+            .where({ teacher_id });
+
+        // الحصول على جميع الكويزات المرتبطة بهذه الصفوف مع أسماء الطلاب
+        const quizzes = await knex('class_quizzes')
+            .join('quizzes', 'class_quizzes.quiz_id', 'quizzes.id')
+            .join('classes', 'class_quizzes.class_id', 'classes.id')
+            .join('class_students', 'classes.id', 'class_students.class_id')
+            .join('student', 'class_students.student_id', 'student.id')
+            .select(
+                'quizzes.id as quiz_id', // Include quiz_id in the response
+                'classes.name as class_name',
+                'quizzes.title as quiz_name',
+                'student.name as student_name'
+            )
+            .whereIn('classes.id', classes.map(c => c.class_id));
+
+        // إعادة النتائج للعميل
+        res.status(200).json({ classes, quizzes });
+    } catch (error) {
+        console.error('Error fetching quizzes for teacher:', error);
+        next(error);
+    }
+};
+
 
 
 // Controller for fetching teacher quizzes

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Home, User, Book, Settings, Mail, Menu, ChevronLeft } from 'lucide-react';
 
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -26,49 +27,53 @@ const Sidebar = () => {
     };
   }, [isExpanded]);
 
-  return (
-    <nav
-      ref={sidebarRef}
-      className={`transition-all h-screen fixed top-0 left-0 py-4 font-[sans-serif] ${isExpanded ? 'w-[200px] z-50' : 'w-[50px] z-10'} bg-[#ffffff]`}
-    >
-      <button onClick={toggleSidebar} className="absolute top-4 right-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          className="w-5 h-5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M3 12l18 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 3l0 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
+  const menuItems = [
+    { icon: Home, text: 'Dashboard' },
+    { icon: User, text: 'Profile' },
+    { icon: Book, text: 'Courses' },
+    { icon: Mail, text: 'Messages' },
+    { icon: Settings, text: 'Settings' },
+  ];
 
-      <ul className="space-y-2.5 mt-6">
-        <li className="relative group">
-          <a
-            href="javascript:void(0)"
-            className={`text-[#333] text-sm flex items-center ${isExpanded ? 'bg-white hover:bg-white px-3 py-4' : 'px-2 py-2'} transition-all rounded-sm`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              className="w-5 h-5"
-              viewBox="0 0 512 512"
-            >
-              <path d=""/>
-            </svg>
-            {/* Add transition to the span for smoother appearance */}
-            <span
-              className={`ml-2 overflow-hidden transition-all duration-700 ease-in-out ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}
-              style={{ transitionDelay: isExpanded ? '0.2s' : '0s' }} // Optional delay
-            >
-              Dashboard
-            </span>
-          </a>
-        </li>
-        {/* Add more items as needed */}
-      </ul>
-    </nav>
+  return (
+    <div
+      ref={sidebarRef}
+      className={`fixed top-0 left-0 h-screen bg-[#0e1b30] text-white  transition-all duration-300 ${
+        isExpanded ? 'w-64' : 'w-20'
+      }`}
+    >
+      <button
+        onClick={toggleSidebar}
+        className="w-full p-4 flex justify-end items-center text-white hover:text-yellow-100"
+      >
+        {isExpanded ? (
+          <ChevronLeft size={24} />
+        ) : (
+          <Menu size={24} />
+        )}
+      </button>
+      <nav>
+        <ul>
+          {menuItems.map((item, index) => (
+            <li key={index} className="mb-2">
+              <a
+                href="#"
+                className={`flex items-center p-4 transition-colors duration-200 hover:bg-[#9bafbe63] hover:text-white ${
+                  isExpanded ? 'justify-start' : 'justify-center'
+                }`}
+              >
+                <item.icon size={24} className={`${isExpanded ? 'mr-4' : ''} text-white hover:text-black`} />
+                {isExpanded && (
+                  <span className="transition-opacity duration-200 opacity-100">
+                    {item.text}
+                  </span>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
   );
 };
 

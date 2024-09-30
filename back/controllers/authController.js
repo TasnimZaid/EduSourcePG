@@ -28,7 +28,7 @@ const sendOtp = async (email, otp) => {
 // Register a new teacher
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, university_name } = req.body;
+    const { name, email, password, university_name , national_id } = req.body;
 
     // Check if the user already exists
     const existingUser = await knex('teacher').where({ email }).first();
@@ -43,7 +43,8 @@ exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      university_name
+      university_name ,
+      national_id
     }).returning('*'); // Return the inserted teacher
 
     // Generate and send OTP
