@@ -3,7 +3,7 @@ exports.up = function(knex) {
       table.increments('id').primary();
       table.string('name').notNullable();
       table.string('password').notNullable(); 
-      table.string('subject').notNullable(); // رح احذفها
+      table.string('subject').nullable(); 
       table.string('email').notNullable().unique();
       table.enu("gender", ["male", "female"]); 
       table.boolean("isActivate").defaultTo(true);

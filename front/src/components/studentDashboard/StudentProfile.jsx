@@ -3,6 +3,7 @@ import { BookOpen, Globe, PenTool, Calculator } from 'lucide-react';
 import NavBar from '../NavBar';
 import QuizzesOfStudent from './QuizzesOfStudent';
 import StudentMaterials from './StudentMaterials';
+import space from "./assets/space.png"
 
 const subjects = [
   { name: 'Math', icon: Calculator, color: 'bg-pink-400' },

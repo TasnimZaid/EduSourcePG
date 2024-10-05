@@ -38,6 +38,14 @@ exports.up = function(knex) {
                 'Literature'
             ]).notNullable(); 
             table.timestamps(true, true); 
+            table.integer('request_id').unsigned().nullable() // إضافة request_id
+            .references('id').inTable('requests') // الربط بجدول الطلبات
+            .onDelete('SET NULL'); // إذا تم حذف الطلب، يتم تعيينه إلى NULL
+            table.integer('duration').nullable(); // مدة الامتحان
+            table.integer('total_marks').nullable(); // العلامات الكلية
+            table.string('pdf_url').nullable(); // رابط ملف PDF
+            table.string('word_url').nullable(); // رابط ملف Word
+            table.string('google_drive_url').nullable(); // رابط Google Drive
         })
         // Create questions table
         .createTable('questions', function(table) {
@@ -60,3 +68,5 @@ exports.down = function(knex) {
         .dropTableIfExists('questions')
         .dropTableIfExists('quizzes');
 };
+
+

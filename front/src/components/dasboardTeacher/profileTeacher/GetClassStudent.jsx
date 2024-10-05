@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Folder, User, ChevronDown, ChevronRight } from 'lucide-react';
+import { Folder, User, X } from 'lucide-react';
 
 const GetClassStudent = ({ teacherId }) => {
     const [students, setStudents] = useState([]);
     const [error, setError] = useState('');
-    const [openClass, setOpenClass] = useState(null);
+    const [selectedClass, setSelectedClass] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchClassStudents = async () => {
@@ -38,8 +39,14 @@ const GetClassStudent = ({ teacherId }) => {
         'bg-indigo-100 text-indigo-600',
     ];
 
-    const toggleClass = (className) => {
-        setOpenClass(openClass === className ? null : className);
+    const openModal = (className) => {
+        setSelectedClass(className);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setSelectedClass(null);
+        setIsModalOpen(false);
     };
 
     return (
@@ -52,45 +59,55 @@ const GetClassStudent = ({ teacherId }) => {
                         <div key={className} className="relative">
                             <div 
                                 className={`cursor-pointer rounded-lg p-4 shadow-md transition-all duration-300 hover:shadow-lg ${folderColors[index % folderColors.length]}`}
-                                onClick={() => toggleClass(className)}
+                                onClick={() => openModal(className)}
                             >
                                 <div className="flex items-center justify-between">
-                                    <Folder size={48} />
-                                    <span className="text-lg font-semibold">{className}</span>
+                                    <div>
+                                    <Folder size={35} />
+                                    
+                                    <span className="text-sm font-semibold">{className}</span></div>
                                 </div>
                                 <div className="mt-2 flex items-center justify-between">
                                     <span>{classStudents.length} students</span>
-                                    {openClass === className ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
                                 </div>
                             </div>
-                            {openClass === className && (
-                                <div className="absolute z-10 left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-96 overflow-y-auto">
-                                    <table className="w-full">
-                                        <thead>
-                                            <tr className="bg-gray-100">
-                                                <th className="p-2 text-left">Student Name</th>
-                                                <th className="p-2 text-left">Teacher Name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {classStudents.map((student) => (
-                                                <tr key={student.id} className="border-t">
-                                                    <td className="p-2 flex items-center">
-                                                        <User className="mr-2" size={16} />
-                                                        {student.student_name}
-                                                    </td>
-                                                    <td className="p-2">{student.teacher_name}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            )}
                         </div>
                     ))}
                 </div>
             ) : (
                 <p>No classes found for this teacher.</p>
+            )}
+
+            {isModalOpen && selectedClass && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold">{selectedClass}</h3>
+                            <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <table className="w-full">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    <th className="p-2 text-left">Student Name</th>
+                                    <th className="p-2 text-left">Teacher Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {groupedStudents[selectedClass].map((student) => (
+                                    <tr key={student.id} className="border-t">
+                                        <td className="p-2 flex items-center">
+                                            <User className="mr-2" size={16} />
+                                            {student.student_name}
+                                        </td>
+                                        <td className="p-2">{student.teacher_name}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             )}
         </div>
     );

@@ -22,6 +22,27 @@ router.get('/quizz/:id', async (req, res) => {
  
 });
 
+
+
+
+// Route to get a specific quiz by ID, including its questions
+router.get('/quizzwithQ/:id', async (req, res) => {
+  const quizId = req.params.id;
+  
+  try {
+      // Use the exported controller function
+      const quiz = await quizzezController.getQuizWithQuestions(quizId);
+
+      if (!quiz) {
+          return res.status(404).json({ message: 'Quiz not found' });
+      }
+
+      res.json(quiz);
+  } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // to get material 
 router.get('/getMaterials', quizzezController.getMaterials);
 // Route for inserting a quiz

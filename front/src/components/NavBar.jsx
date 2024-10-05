@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, User, LogOut } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40", onLogout = () => {} }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,10 +33,11 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                <a href="#" className={linkClass}>Home</a>
-                <a href="#" className={linkClass}>About</a>
-                <a href="#" className={linkClass}>Services</a>
-                <a href="#" className={linkClass}>Contact</a>
+                <Link to="/" className={linkClass}>Home</Link> {/* Changed to Link */}
+                <Link to="/consultant" className={linkClass}>Consultant</Link> {/* Changed to Link */}
+                <Link to="/about" className={linkClass}>About</Link> {/* Changed to Link */}
+                <Link to="/services" className={linkClass}>Services</Link> {/* Changed to Link */}
+                <Link to="/contact" className={linkClass}>Contact</Link> {/* Changed to Link */}
               </div>
             </div>
           </div>
@@ -76,10 +78,10 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
       {isOpen && (
         <div className="md:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="#" className={linkClass}>Home</a>
-            <a href="#" className={linkClass}>About</a>
-            <a href="#" className={linkClass}>Services</a>
-            <a href="#" className={linkClass}>Contact</a>
+            <Link to="/" className={linkClass}>Home</Link> {/* Changed to Link */}
+            <Link to="/about" className={linkClass}>About</Link> {/* Changed to Link */}
+            <Link to="/services" className={linkClass}>Services</Link> {/* Changed to Link */}
+            <Link to="/contact" className={linkClass}>Contact</Link> {/* Changed to Link */}
             {isSignedIn && (
               <button onClick={onLogout} className={`flex items-center w-full ${linkClass}`}>
                 <LogOut className="h-5 w-5 mr-1" />

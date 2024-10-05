@@ -11,7 +11,6 @@ module.exports = {
         lightTeal: "#6C9BA1",
         white: "#fff",
         black: "#000",
-        gray: "#4B5563"
       },
       animation: {
         'fade-in-down': 'fadeInDown 1s ease-out',

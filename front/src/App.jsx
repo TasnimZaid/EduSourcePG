@@ -18,10 +18,19 @@ import HomePage from "./components/homePage/HomePage";
 import MainResourcesPage from "./components/dasboardTeacher/mainPageDashboard/MainResourcespage";
 import DetailsResources from "./components/dasboardTeacher/materialPage/DetailsResources";
 import ProfileTeacher from "./components/dasboardTeacher/profileTeacher/ProfileTeacher";
-
+import TeacherProfile from "./components/dasboardTeacher/profileTeacher/TeacherProfile";
+import ProfileExplorer from "./components/dasboardTeacher/profileTeacher/ProfileExplorer";
+import TeacherProfileInfo from "./components/dasboardTeacher/profileTeacher/TeacherProfileInfo";
 
 import StudentDashboard from "./components/studentDashboard/StudentProfile";
+import StudentProfile from "./components/studentDashboard/StudentDashboard";
 
+
+import QuizPlatform from "./components/quizePage/QuizePAge";
+
+
+
+import Consultants from "./components/consultant.jsx/Consultants";
 function App() {
   return (
     <Router>
@@ -43,11 +52,23 @@ function App() {
           <Route path="/MainResourcesPage" element={<MainResourcesPage />} />
           <Route path="/DetailsResources" element={<DetailsResources />} />
           <Route path="/ProfileTeacher" element={<ProfileTeacher />} />
+          <Route path="/ProfileExplorer" element={<ProfileExplorer />} />
+          <Route path="/TeacherProfileInfo" element={<TeacherProfileInfo />} />
+
+
 
           <Route path="/StudentDashboard" element={<StudentDashboard />} />
 
+          
+          <Route path="/StudentProfile" element={<StudentProfile />} />
+          <Route path="/TeacherProfile" element={<TeacherProfile />} />
 
-       
+          
+          <Route path="/QuizPlatform" element={<QuizPlatform />} />
+
+          <Route path="/Consultants" element={<Consultants />} />
+
+          
 
           
           

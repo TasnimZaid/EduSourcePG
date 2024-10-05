@@ -3,10 +3,10 @@ import axios from 'axios';
 import { Book, CheckCircle, XCircle, PlusCircle, Users, Briefcase, GraduationCap, Search } from 'lucide-react';
 
 // Shared styles
-const cardStyle = "bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200";
+const cardStyle = "bg-white  rounded-lg overflow-hidden ";
 const headingStyle = "text-2xl font-bold text-gray-800 mb-4";
 const inputStyle = "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500";
-const buttonStyle = "w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center";
+const buttonStyle = "w-full bg-black text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center";
 const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
 
 const CreateClass = () => {
@@ -36,7 +36,7 @@ const CreateClass = () => {
     return (
         <div className={`${cardStyle} max-w-md mx-auto p-6`}>
             <div className="flex items-center justify-center mb-6">
-                <GraduationCap size={32} className="text-blue-500 mr-2" />
+                <GraduationCap size={32} className="text-black mr-2" />
                 <h2 className={headingStyle}>Create New Class</h2>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">

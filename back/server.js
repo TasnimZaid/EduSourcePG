@@ -11,6 +11,9 @@ const savedQuizRoutes = require('./routes/savedQuizTeacherRoutes')
 const classRoutes = require('./routes/classRoute')
 const authRoutsStudent = require('./routes/authRoutsStudent');
 const studentMaterialRoutes = require('./routes/studentMaterialRoutes')
+const tasksRouter = require('./routes/tasksRoutes')
+const teacherProfileRoutes = require('./routes/teacherProfileRoutes')
+const teacherConsultantRoutes = require('./routes/teacherConsultantRoutes')
 const app = express();
 
 
@@ -26,6 +29,12 @@ app.use('/api', savedQuizRoutes);
 app.use('/api', classRoutes);
 app.use('/api', authRoutsStudent);
 app.use('/api', studentMaterialRoutes);
+app.use('/api', tasksRouter);
+app.use('/api', teacherProfileRoutes);
+app.use('/api', teacherConsultantRoutes);
+
+
+
 
 
 

@@ -92,6 +92,37 @@ function getQuizById(id) {
 }
 
 
+
+// Method to get quiz and its questions by quiz ID
+async function getQuizWithQuestions(quizId) {
+  // Fetch the quiz with its questions using a join
+  const quiz = await knex('quizzes')
+      .where('quizzes.id', quizId)
+      .first() // Get only one quiz
+      .select('quizzes.*') // Select all quiz fields
+      .leftJoin('questions', 'quizzes.id', 'questions.quiz_id') // Join with questions table
+      .select(knex.raw(`
+          quizzes.*,
+          json_agg(
+              json_build_object(
+                  'id', questions.id,
+                  'question_text', questions.question_text,
+                  'question_img', questions.question_img,
+                  'has_choices', questions.has_choices,
+                  'choices', questions.choices,
+                  'choices_images', questions.choices_images,
+                  'correct_answer', questions.correct_answer
+              )
+          ) as questions
+      `)) // Aggregate questions into a JSON array
+      .groupBy('quizzes.id'); // Group by quiz ID to get all questions
+
+  return quiz;
+}
+
+
+
+
 // to det material to use it in post quize 
 // Fetch materials endpoint
 const getMaterials = async (req, res) => {
@@ -164,5 +195,6 @@ module.exports = {
   getQuizById,
   createQuiz,
   createQuestion,
-  getMaterials
+  getMaterials ,
+  getQuizWithQuestions
 };
