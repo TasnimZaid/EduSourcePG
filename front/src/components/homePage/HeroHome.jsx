@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import hero1 from './assets/1.png';
 import hero2 from './assets/2.png';
-import SpaceAnimation from './SpaceAnimation';
+import { Link } from 'react-router-dom';
+
 
 function HeroHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -49,7 +50,6 @@ function HeroHome() {
           />
         </div>
       </div>
-      <SpaceAnimation />
       <div className="absolute inset-0 bg-opacity-50"></div>
       <div className="relative z-10 flex flex-col items-center justify-center w-full text-center text-[#2F32A2] px-4">
         <h1 className="text-5xl font-bold mb-4 animate-slide-in-top">
@@ -62,9 +62,12 @@ function HeroHome() {
           {slides[currentSlide].description}
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in">
+        <Link to="/login">
           <button className="bg-gradient-to-r from-cyan-500 to-[#2F32A2] hover:from-[#2F32A2] hover:to-cyan-500 text-white font-bold py-2 px-6 rounded-full transition duration-300 animate-pulse">
             FOR TEACHERS
           </button>
+          </Link>
+
           <button className="bg-gradient-to-r from-[#2F32A2] to-cyan-500 hover:from-cyan-500 hover:to-[#2F32A2] text-white font-bold py-2 px-6 rounded-full transition duration-300 animate-pulse">
             FOR STUDENTS
           </button>

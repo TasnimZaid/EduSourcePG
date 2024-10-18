@@ -3,7 +3,7 @@ import React from 'react';
 import { Book } from 'lucide-react';
 
 const QuizCard = ({ quiz_img, quiz_title, questions, grade, isPremium, onClick }) => (
-  <div className="flex items-start p-4 border border-[#e5e7eb] rounded-md mb-4 bg-[#fff] cursor-pointer" onClick={onClick}>
+  <div className="flex items-start p-4 border border-[#e5e7eb] rounded-md mb-4 hover:bg-[#bbb9b951] cursor-pointer" onClick={onClick}>
     <img src={quiz_img || "1"} alt={quiz_title} className="w-16 h-16 object-cover rounded-md mr-4" />
     <div>
       <div className="flex items-center">

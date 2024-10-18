@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { User, Book, Users, Award, PlusCircle } from 'lucide-react';
 
-const AddStudentToClass = ({ teacherId = 1 }) => {
+const AddStudentToClass = () => {
   const [selectedClassId, setSelectedClassId] = useState('');
   const [nationalId, setNationalId] = useState('');
   const [message, setMessage] = useState('');
   const [classes, setClasses] = useState([]);
   const [error, setError] = useState('');
+
+  const token = sessionStorage.getItem("token");
+  const teacherId = sessionStorage.getItem("teacherId");
+  const teacherName = sessionStorage.getItem("teacherName");
+  const teacherEmail = sessionStorage.getItem("teacherEmail");
+  const universityName = sessionStorage.getItem("universityName");
 
 
   useEffect(() => {

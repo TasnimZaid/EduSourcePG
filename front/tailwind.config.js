@@ -7,10 +7,12 @@ module.exports = {
     extend: {
       colors: {
         darkTeal: "#15263F",
-        teal: "#315A70",
+        // teal: "#315A70",
         lightTeal: "#6C9BA1",
         white: "#fff",
         black: "#000",
+      }, fontFamily: {
+        lateef: ['Lateef', 'sans-serif'],
       },
       animation: {
         'fade-in-down': 'fadeInDown 1s ease-out',

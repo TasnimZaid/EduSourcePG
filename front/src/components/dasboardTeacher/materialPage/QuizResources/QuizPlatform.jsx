@@ -2,23 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import QuizCard from './QuizCard';
 import QuizAnswer from './QuizAnswer';
-import { Book, MessageSquare, FileText, Video, Share2, MoreHorizontal, Play, Save, Sparkles } from 'lucide-react';
+import { Share2, MoreHorizontal, Play, Save, Sparkles } from 'lucide-react';
 import QuizForm from './QuizForm';
-import AddQuizToClass from './AddQuizToClass'; // Import the modal component
-
-const NavButton = ({ icon: Icon, text, isActive, onClick, color }) => (
-  <button
-    className={`flex items-center px-4 py-2 rounded-full transition-all duration-300 ${
-      isActive 
-        ? 'bg-[#F3F4F6] text-[#111827] shadow-md' 
-        : 'text-[#4B5563] hover:bg-[#F9FAFB]'
-    }`}
-    onClick={onClick}
-  >
-    <Icon size={20} style={{ color: isActive ? color : '#6B7280' }} className="mr-2" />
-    <span className={`font-medium ${isActive ? 'text-[#111827]' : 'text-[#4B5563]'}`} style={{ color: isActive ? color : '#4B5563' }}>{text}</span>
-  </button>
-);
+import AddQuizToClass from './AddQuizToClass';
+import QuizTabs from '../Tabs';
 
 const QuizPlatform = () => {
   const [activeTab, setActiveTab] = useState('All');
@@ -26,7 +13,7 @@ const QuizPlatform = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [showAddToClassModal, setShowAddToClassModal] = useState(false); // Modal state
+  const [showAddToClassModal, setShowAddToClassModal] = useState(false);
 
   useEffect(() => {
     fetchQuizzes();
@@ -72,35 +59,15 @@ const QuizPlatform = () => {
     setShowAddToClassModal(false);
   };
 
-  const tabs = [
-    { name: 'All', icon: Book, color: '#10B981' }, 
-    { name: 'Quizzes', icon: Book, color: '#14B8A6' }, 
-    { name: 'Lessons', icon: MessageSquare, color: '#F59E0B' }, 
-    { name: 'Texts', icon: FileText, color: '#3B82F6' }, 
-    { name: 'Interactive Videos', icon: Video, color: '#EC4899' } 
-  ];
-
   const filteredQuizzes = (activeTab === 'All' || activeTab === 'Quizzes') 
     ? quizzes 
     : quizzes.filter(quiz => quiz.material_name === activeTab);
 
   return (
-    <div className="container mx-auto h-screen flex flex-col p-6 ">
-      <div className="flex space-x-2 mb-6 py-5 overflow-x-auto bg-white p-2 rounded-lg shadow-sm bg-[#ffff]">
-        {tabs.map((tab) => (
-          <NavButton 
-            key={tab.name}
-            icon={tab.icon}
-            text={tab.name}
-            isActive={activeTab === tab.name}
-            onClick={() => setActiveTab(tab.name)}
-            color={tab.color}
-          />
-        ))}
-      </div>
+    <div className="container mx-auto h-screen flex flex-col">
 
-      <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6 flex-grow overflow-hidden ">
-        <div className="w-full lg:w-1/2 bg-white rounded-lg shadow-md overflow-hidden flex flex-col p-4 bg-[#ffff]">
+      <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6 flex-grow overflow-hidden">
+        <div className="w-full lg:w-1/3 bg-white rounded-lg shadow-md overflow-hidden flex flex-col p-4">
           <div className="text-sm font-bold mb-6 text-[#111827] flex justify-between items-center">
             <span>{filteredQuizzes.length} Quizzes</span>
             <QuizForm />
@@ -117,7 +84,7 @@ const QuizPlatform = () => {
           </div>
         </div>
 
-        <div className="w-full flex flex-col overflow-hidden bg-white rounded-lg shadow-md p-6  bg-[#ffff]">
+        <div className="w-full flex flex-col overflow-hidden bg-white rounded-lg shadow-md p-6">
           {selectedQuiz ? (
             <>
               <div className="flex justify-between items-center mb-4">
@@ -150,7 +117,35 @@ const QuizPlatform = () => {
                 </button>
               </div>
 
-              {/* Other content */}
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold mb-4">Quiz Questions</h3>
+                {selectedQuiz.questions && selectedQuiz.questions.length > 0 ? (
+                  selectedQuiz.questions.map((question, index) => (
+                    <div key={index} className="mb-6 p-4 bg-gray-50 rounded-lg">
+                      <p className="font-medium mb-2">{index + 1}. {question.question_text}</p>
+                      <ul className="list-disc pl-6">
+                        {question.options && question.options.map((option, optionIndex) => (
+                          <li key={optionIndex} className="mb-1">{option}</li>
+                        ))}
+                      </ul>
+                      {showAnswers && question.correct_answer && (
+                        <QuizAnswer answer={question.correct_answer} />
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p>No questions available for this quiz.</p>
+                )}
+                {selectedQuiz.questions && selectedQuiz.questions.length > 0 && (
+                  <button
+                    className="mt-4 bg-[#3B82F6] text-white px-4 py-2 rounded-md hover:bg-[#2563EB] transition-colors duration-200 flex items-center"
+                    onClick={() => setShowAnswers(!showAnswers)}
+                  >
+                    <Sparkles size={18} className="mr-2" />
+                    {showAnswers ? 'Hide Answers' : 'Show Answers'}
+                  </button>
+                )}
+              </div>
             </>
           ) : (
             <div className="text-center text-[#6B7280]">Select a quiz to view details</div>
@@ -158,8 +153,7 @@ const QuizPlatform = () => {
         </div>
       </div>
 
-      {/* Add Quiz to Class Modal */}
-      {showAddToClassModal && (
+      {showAddToClassModal && selectedQuiz && (
         <AddQuizToClass 
           quizId={selectedQuiz.quiz_id} 
           onClose={closeAddToClassModal} 

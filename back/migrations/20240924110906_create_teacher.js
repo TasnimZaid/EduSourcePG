@@ -23,6 +23,8 @@ exports.up = function(knex) {
         table.integer('years_of_experience').nullable(); // سنوات الخبرة
         table.string('specialization').nullable(); // التخصص
         table.specificType('services', 'text[]').nullable(); // يمكن استخدام text[] لتخزين الخدمات كمصفوفة
+        table.decimal('quiz_payment', 10, 2).nullable(); // New column for payment amount for quizzes and activities
+
 
     });
 };

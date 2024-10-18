@@ -105,7 +105,7 @@ exports.verifyOtp = async (req, res) => {
     // Verify OTP
     const teacher = await knex('teacher').where({ email, otp }).first();
     if (!teacher) {
-      return res.status(401).json({ message: 'Invalid OTP.' });
+      return res.status(401).json({ message: 'Invalid OTP or email.' });
     }
 
     // Create a token
@@ -116,6 +116,7 @@ exports.verifyOtp = async (req, res) => {
 
     // Send the token and teacher details
     res.status(200).json({
+      message: 'OTP verified successfully.',
       token,
       teacher: {
         id: teacher.id,
@@ -127,7 +128,7 @@ exports.verifyOtp = async (req, res) => {
 
   } catch (error) {
     console.error("Verification failed:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Verification failed", error: error.message });
   }
 };
 

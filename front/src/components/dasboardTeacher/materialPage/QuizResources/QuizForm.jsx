@@ -157,7 +157,7 @@ const QuizForm = () => {
     <div className="p-4">
       <button
         onClick={handleOpenModal}
-        className="bg-[#0e1b30] text-white px-6 py-3 rounded-lg shadow-md hover:bg-[#bedcb6] hover:text-black transition duration-300 flex items-center"
+        className="bg-[#0b698b] text-white px-6 py-3 rounded-lg shadow-md hover:bg-[#bedcb6] hover:text-black transition duration-300 flex items-center"
       >
         <PlusCircle className="mr-2" size={20} />
         Create Quiz

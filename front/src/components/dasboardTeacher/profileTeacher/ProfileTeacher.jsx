@@ -20,3 +20,5 @@ function ProfileTeacher(){
 
 }
 export default ProfileTeacher;
+
+// هاد الفايل المفروض ينحذف 

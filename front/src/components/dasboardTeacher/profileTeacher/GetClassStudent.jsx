@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Folder, User, X } from 'lucide-react';
 
-const GetClassStudent = ({ teacherId }) => {
+const GetClassStudent = () => {
     const [students, setStudents] = useState([]);
     const [error, setError] = useState('');
     const [selectedClass, setSelectedClass] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const token = sessionStorage.getItem("token");
+    const teacherId = sessionStorage.getItem("teacherId");
+    const teacherName = sessionStorage.getItem("teacherName");
+    const teacherEmail = sessionStorage.getItem("teacherEmail");
+    const universityName = sessionStorage.getItem("universityName");
     useEffect(() => {
         const fetchClassStudents = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/1/getClassStudentsByTeacherId`);
+                const response = await axios.get(`http://localhost:3000/api/${teacherId}/getClassStudentsByTeacherId`);
                 setStudents(response.data);
             } catch (error) {
                 console.error('Error fetching class students:', error);

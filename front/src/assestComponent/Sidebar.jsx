@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Home, User, Book, Settings, Mail, Menu, ChevronLeft } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,17 +29,17 @@ const Sidebar = () => {
   }, [isExpanded]);
 
   const menuItems = [
-    { icon: Home, text: 'Dashboard' },
-    { icon: User, text: 'Profile' },
-    { icon: Book, text: 'Courses' },
-    { icon: Mail, text: 'Messages' },
-    { icon: Settings, text: 'Settings' },
+    { icon: Home, text: 'Dashboard', path: '/' },
+    { icon: User, text: 'Profile', path: '/TeacherProfileInfo' },
+    { icon: Book, text: 'Courses', path: '/' },
+    { icon: Mail, text: 'Messages', path: '/' },
+    { icon: Settings, text: 'Settings', path: '/' },
   ];
 
   return (
     <div
       ref={sidebarRef}
-      className={`fixed top-0 left-0 h-screen bg-[#0e1b30] text-white  transition-all duration-300 ${
+      className={`fixed top-0 left-0 h-screen bg-[#0e1b30] text-white transition-all duration-300 ${
         isExpanded ? 'w-64' : 'w-20'
       }`}
     >
@@ -56,8 +57,8 @@ const Sidebar = () => {
         <ul>
           {menuItems.map((item, index) => (
             <li key={index} className="mb-2">
-              <a
-                href="#"
+              <Link
+                to={item.path} // Use Link to navigate
                 className={`flex items-center p-4 transition-colors duration-200 hover:bg-[#9bafbe63] hover:text-white ${
                   isExpanded ? 'justify-start' : 'justify-center'
                 }`}
@@ -68,7 +69,7 @@ const Sidebar = () => {
                     {item.text}
                   </span>
                 )}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

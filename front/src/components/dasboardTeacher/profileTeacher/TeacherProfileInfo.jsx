@@ -5,7 +5,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 import Sidebar from '../../../assestComponent/Sidebar';
 import axios from 'axios';
 
-const TeacherProfileInfo = ({ teacherId }) => {
+const TeacherProfileInfo = () => {
   const [teacher, setTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,6 +22,14 @@ const TeacherProfileInfo = ({ teacherId }) => {
   const [editingField, setEditingField] = useState(null);
   const [passwordError, setPasswordError] = useState('');
 
+
+    // Access session data when the component mounts
+        const token = sessionStorage.getItem("token");
+        const teacherId = sessionStorage.getItem("teacherId");
+        const teacherName = sessionStorage.getItem("teacherName");
+        const teacherEmail = sessionStorage.getItem("teacherEmail");
+        const universityName = sessionStorage.getItem("universityName");
+
   const mockChartData = [
     { name: 'Mar', value: 30 },
     { name: 'Apr', value: 40 },
@@ -31,11 +39,11 @@ const TeacherProfileInfo = ({ teacherId }) => {
     { name: 'Aug', value: 60 },
     { name: 'Sep', value: 75 },
   ];
-
+console.log(teacher) ;
   useEffect(() => {
     const fetchTeacherProfile = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/teacherprofile/1`);
+        const response = await axios.get(`http://localhost:3000/api/teacherprofile/${teacherId}`);
         setTeacher(response.data);
         setFormData({
           ...response.data,
@@ -68,7 +76,7 @@ const TeacherProfileInfo = ({ teacherId }) => {
           setPasswordError("New passwords don't match");
           return;
         }
-        await axios.patch(`http://localhost:3000/api/teacherprofile/1/password`, {
+        await axios.patch(`http://localhost:3000/api/teacherprofile/${teacherId}/password`, {
           currentPassword: formData.currentPassword,
           newPassword: formData.newPassword,
         });
@@ -79,7 +87,7 @@ const TeacherProfileInfo = ({ teacherId }) => {
           confirmNewPassword: '',
         });
       } else {
-        await axios.patch(`http://localhost:3000/api/teacherprofile/1`, { [field]: formData[field] });
+        await axios.patch(`http://localhost:3000/api/teacherprofile/${teacherId}`, { [field]: formData[field] });
         setTeacher({ ...teacher, [field]: formData[field] });
       }
       setEditingField(null);
@@ -110,7 +118,7 @@ const TeacherProfileInfo = ({ teacherId }) => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const response = await axios.post(`http://localhost:3000/api/teacherprofile/1/image`, formData, {
+      const response = await axios.post(`http://localhost:3000/api/teacherprofile/${teacherId}/image`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setTeacher({ ...teacher, teacher_img: response.data.imagePath });
@@ -258,11 +266,11 @@ const TeacherProfileInfo = ({ teacherId }) => {
           <h2 className="text-xl font-semibold mb-4">Teacher Profile</h2>
           <div className="flex items-center mb-4">
             <div className="relative">
-              <img
-                src={teacher.teacher_img || '/api/placeholder/150/150'}
-                alt="Teacher"
-                className="w-32 h-32 rounded-full object-cover"
-              />
+            <img
+              src={`http://localhost:3000/${teacher.teacher_img}`}
+              alt="Teacher"
+              className="w-32 h-32 rounded-full object-cover"
+            />
               <label htmlFor="image-upload" className="absolute bottom-0 right-0 bg-white p-1 rounded-full cursor-pointer">
                 <Camera size={20} />
               </label>

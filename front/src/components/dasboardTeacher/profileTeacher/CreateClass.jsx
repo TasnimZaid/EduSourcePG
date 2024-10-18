@@ -16,7 +16,13 @@ const CreateClass = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const teacherId = 1; // Hardcoded teacher ID
+
+        const token = sessionStorage.getItem("token");
+        const teacherId = sessionStorage.getItem("teacherId");
+        const teacherName = sessionStorage.getItem("teacherName");
+        const teacherEmail = sessionStorage.getItem("teacherEmail");
+        const universityName = sessionStorage.getItem("universityName");
+      
 
         try {
             const response = await axios.post('http://localhost:3000/api/createClass', {

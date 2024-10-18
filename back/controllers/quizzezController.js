@@ -123,7 +123,6 @@ async function getQuizWithQuestions(quizId) {
 
 
 
-// to det material to use it in post quize 
 // Fetch materials endpoint
 const getMaterials = async (req, res) => {
   try {

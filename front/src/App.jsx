@@ -21,6 +21,9 @@ import ProfileTeacher from "./components/dasboardTeacher/profileTeacher/ProfileT
 import TeacherProfile from "./components/dasboardTeacher/profileTeacher/TeacherProfile";
 import ProfileExplorer from "./components/dasboardTeacher/profileTeacher/ProfileExplorer";
 import TeacherProfileInfo from "./components/dasboardTeacher/profileTeacher/TeacherProfileInfo";
+import ConsultantRequests from "./components/dasboardTeacher/profileTeacher/ConsultantProfile";
+import AppointmentForConsultant from "./components/dasboardTeacher/Consultant/ConsultantAppointment";
+
 
 import StudentDashboard from "./components/studentDashboard/StudentProfile";
 import StudentProfile from "./components/studentDashboard/StudentDashboard";
@@ -31,6 +34,11 @@ import QuizPlatform from "./components/quizePage/QuizePAge";
 
 
 import Consultants from "./components/consultant.jsx/Consultants";
+import TeacherDetailPage from "./components/consultant.jsx/ConsultantDetails";
+import AppointmentforTeacher from "./components/consultant.jsx/AppointmentforTeacher";
+
+
+
 function App() {
   return (
     <Router>
@@ -51,23 +59,35 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/MainResourcesPage" element={<MainResourcesPage />} />
           <Route path="/DetailsResources" element={<DetailsResources />} />
-          <Route path="/ProfileTeacher" element={<ProfileTeacher />} />
+          {/* <Route path="/ProfileTeacher" element={<ProfileTeacher />} /> */}
           <Route path="/ProfileExplorer" element={<ProfileExplorer />} />
-          <Route path="/TeacherProfileInfo" element={<TeacherProfileInfo />} />
+          <Route path="/ConsultantRequests" element={<ConsultantRequests />} />
 
+          
 
 
           <Route path="/StudentDashboard" element={<StudentDashboard />} />
 
           
-          <Route path="/StudentProfile" element={<StudentProfile />} />
+          <Route path="/TeacherProfileInfo" element={<TeacherProfileInfo />} />
           <Route path="/TeacherProfile" element={<TeacherProfile />} />
+          <Route path="/AppointmentForConsultant" element={<AppointmentForConsultant />} />
+
+          
+
+
+          <Route path="/StudentProfile" element={<StudentProfile />} />
 
           
           <Route path="/QuizPlatform" element={<QuizPlatform />} />
 
           <Route path="/Consultants" element={<Consultants />} />
+          <Route path="/TeacherDetailPage/:id" element={<TeacherDetailPage />} />
+          
+          <Route path="/AppointmentforTeacher" element={<AppointmentforTeacher />} />
 
+          
+          
           
 
           

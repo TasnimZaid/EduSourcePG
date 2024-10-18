@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
-const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40", onLogout = () => {} }) => {
+const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40", onLogout = () => {}, isHomePage = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -22,7 +22,7 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white bg-opacity-80 shadow-lg' : 'bg-transparent'
+      isHomePage ? (isScrolled ? 'bg-white bg-opacity-80 shadow-lg' : 'bg-transparent') : 'bg-white'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -34,7 +34,7 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
                 <Link to="/" className={linkClass}>Home</Link> {/* Changed to Link */}
-                <Link to="/consultant" className={linkClass}>Consultant</Link> {/* Changed to Link */}
+                <Link to="/Consultants" className={linkClass}>Consultant</Link> {/* Changed to Link */}
                 <Link to="/about" className={linkClass}>About</Link> {/* Changed to Link */}
                 <Link to="/services" className={linkClass}>Services</Link> {/* Changed to Link */}
                 <Link to="/contact" className={linkClass}>Contact</Link> {/* Changed to Link */}

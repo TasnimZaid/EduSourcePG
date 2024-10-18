@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const AddQuizToClass = ({ teacherId }) => {
+const AddQuizToClass = () => {
     const [classes, setClasses] = useState([]);
     const [selectedClassId, setSelectedClassId] = useState('');
     const [quizId, setQuizId] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 
+    const token = sessionStorage.getItem("token");
+        const teacherId = sessionStorage.getItem("teacherId");
+        const teacherName = sessionStorage.getItem("teacherName");
+        const teacherEmail = sessionStorage.getItem("teacherEmail");
+        const universityName = sessionStorage.getItem("universityName");
+
+
     // Fetch classes for the teacher
     useEffect(() => {
         const fetchClasses = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/1/getTeacherClasses`);
+                const response = await axios.get(`http://localhost:3000/api/${teacherId}/getTeacherClasses`);
                 setClasses(response.data);
             } catch (error) {
                 console.error('Error fetching classes:', error);

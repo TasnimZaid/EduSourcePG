@@ -1,5 +1,7 @@
 const knex = require('../knex-config');
 const bcrypt = require('bcrypt'); // Ensure bcrypt is imported
+const fs = require("fs");
+const path = require("path");
 
 exports.getTeacherProfile = async (req, res) => {
     const { id } = req.params;
@@ -84,3 +86,24 @@ exports.updatePassword = async (req, res) => {
         res.status(500).json({ message: 'Error updating password' });
     }
 };
+
+
+exports.imageTeacherProfile = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+  
+      const imagePath = req.file.path;
+      console.log(imagePath)
+      await knex('teacher').where({ id }).update({ teacher_img: imagePath });
+  
+      res.json({ imagePath });
+  
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      res.status(500).json({ message: 'Error uploading image' });
+    }
+  };
