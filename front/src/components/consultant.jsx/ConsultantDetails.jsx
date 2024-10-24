@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { User, Book, MessageSquare, HelpCircle, Award, Calendar, Briefcase, FileText, Users, Globe, Send, FileInput, AlignLeft, Type } from 'lucide-react';
 import AppointmentforTeacher from './AppointmentforTeacher';
 import axios from 'axios';
+import NavBar from '../NavBar';
 
 export default function ConsultantDetails() {
   const [isArabic, setIsArabic] = useState(true);
@@ -92,6 +93,7 @@ export default function ConsultantDetails() {
 
   return (
     <div className='bg-gray-100 pt-20'>
+      <NavBar/>
       <div className={`font-sans p-4 ${isArabic ? 'rtl' : 'ltr'} max-w-7xl mx-auto`}>
         <header className="bg-white rounded-lg shadow-md p-6 mb-6 flex justify-between items-center">
           <div className={`flex items-center flex-row-reverse space-x-4 space-x-reverse`}>

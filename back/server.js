@@ -17,6 +17,9 @@ const teacherProfileRoutes = require('./routes/teacherProfileRoutes')
 const teacherConsultantRoutes = require('./routes/teacherConsultantRoutes')
 const consultantAvailabilityRoute = require('./routes/consultantAvailabilityRoute')
 const appointmentRoute = require('./routes/appointmentRoute')
+const authAdmin = require('./routes/adminAuth')
+
+
 const app = express();
 
 
@@ -42,6 +45,7 @@ app.use('/api', teacherProfileRoutes);
 app.use('/api', teacherConsultantRoutes);
 app.use('/api' ,consultantAvailabilityRoute)
 app.use('/api' , appointmentRoute)
+app.use('/api/admin' , authAdmin)
 
 
 

@@ -79,7 +79,20 @@ const getAllConsultantAvailability = async (req, res) => {
   try {
     const result = await knex('consultant_availability as ca')
       .join('teacher as t', 'ca.consultant_id', 't.id')
-      .select('ca.id', 'ca.consultant_id', 't.name as consultant_name', 'ca.date', 'ca.time_slot', 'ca.is_available', 'ca.is_booked')
+      .select(
+        'ca.id',
+        'ca.consultant_id',
+        't.name as consultant_name',
+        't.email',              // Add email
+        't.gender',             // Add gender
+        't.school_name',        // Add school name
+        't.university_name',    // Add university name
+        't.grade',              // Add grade
+        'ca.date',
+        'ca.time_slot',
+        'ca.is_available',
+        'ca.is_booked'
+      )
       .where('ca.is_deleted', false)
       .orderBy(['ca.date', 'ca.time_slot']);
 

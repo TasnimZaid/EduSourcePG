@@ -31,9 +31,9 @@ const Sidebar = () => {
   const menuItems = [
     { icon: Home, text: 'Dashboard', path: '/' },
     { icon: User, text: 'Profile', path: '/TeacherProfileInfo' },
-    { icon: Book, text: 'Courses', path: '/' },
-    { icon: Mail, text: 'Messages', path: '/' },
-    { icon: Settings, text: 'Settings', path: '/' },
+    { icon: Book, text: 'AppointmentForConsultant', path: '/AppointmentForConsultant' },
+    { icon: Mail, text: 'ConsultantRequests', path: '/ConsultantRequests' },
+    { icon: Settings, text: 'TeacherProfile', path: '/TeacherProfile' },
   ];
 
   return (
