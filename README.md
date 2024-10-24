@@ -27,6 +27,9 @@ This platform provides teachers and consultants with a space to create, share, a
 
 ### Database:
 - **PostgreSQL**: To manage user data, lessons, quizzes, and transactions.
+
+## Trello Link : https://trello.com/b/4G85cHNH/edusource
+## Figma Link : 
 - **Knex.js**: For SQL query building and database migrations.
 
 ## Getting Started
