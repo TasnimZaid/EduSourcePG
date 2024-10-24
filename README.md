@@ -27,13 +27,14 @@ This platform provides teachers and consultants with a space to create, share, a
 
 ### Database:
 - **PostgreSQL**: To manage user data, lessons, quizzes, and transactions.
-
-## Trello Link : https://trello.com/b/4G85cHNH/edusource
-## Figma Link : https://www.figma.com/design/LX3jmIxX9vhWbtdssiW84c/Untitled?node-id=0-1&node-type=canvas&t=lr48P626nzrv8ygA-0
 - **Knex.js**: For SQL query building and database migrations.
 
-## Getting Started
+
 
 ### Prerequisites
 - **Node.js**: Ensure Node.js is installed on your machine.
 - **PostgreSQL**: Set up a PostgreSQL database instance.
+
+## Trello Link : https://trello.com/b/4G85cHNH/edusource
+## Figma Link : https://www.figma.com/design/LX3jmIxX9vhWbtdssiW84c/Untitled?node-id=0-1&node-type=canvas&t=lr48P626nzrv8ygA-0
+********
