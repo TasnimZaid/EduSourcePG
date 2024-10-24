@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import Sidebar from "../../../assestComponent/Sidebar";
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import EducationCardsSlider from "./EducationCardsSlider";
 import axios from 'axios';
+import NavBar from "../../NavBar";
 
 // Subject button component
 const SubjectButton = ({ name, img }) => (
@@ -50,8 +50,8 @@ function MainResourcesPage() {
 
   return (
     <div className="grid grid-cols-[auto,1fr] h-screen bg-[#F2F2F2]">
-      <div className="w-16 bg-white shadow-md">
-        <Sidebar />
+      <div className="">
+        <NavBar />
       </div>
       
       <div className="overflow-y-auto p-10 mt-20">

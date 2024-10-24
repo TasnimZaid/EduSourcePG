@@ -13,6 +13,8 @@ module.exports = {
         black: "#000",
       }, fontFamily: {
         lateef: ['Lateef', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+
       },
       animation: {
         'fade-in-down': 'fadeInDown 1s ease-out',

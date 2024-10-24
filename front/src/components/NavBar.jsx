@@ -35,9 +35,9 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
               <div className="ml-10 flex items-baseline space-x-4">
                 <Link to="/" className={linkClass}>Home</Link> {/* Changed to Link */}
                 <Link to="/Consultants" className={linkClass}>Consultant</Link> {/* Changed to Link */}
-                <Link to="/about" className={linkClass}>About</Link> {/* Changed to Link */}
-                <Link to="/services" className={linkClass}>Services</Link> {/* Changed to Link */}
-                <Link to="/contact" className={linkClass}>Contact</Link> {/* Changed to Link */}
+                <Link to="/MainResourcesPage" className={linkClass}>Main</Link> {/* Changed to Link */}
+                <Link to="/DetailsResources" className={linkClass}>Services</Link> {/* Changed to Link */}
+                <Link to="/TeacherProfile" className={linkClass}>profile</Link> {/* Changed to Link */}
               </div>
             </div>
           </div>
@@ -81,7 +81,7 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
             <Link to="/" className={linkClass}>Home</Link> {/* Changed to Link */}
             <Link to="/about" className={linkClass}>About</Link> {/* Changed to Link */}
             <Link to="/services" className={linkClass}>Services</Link> {/* Changed to Link */}
-            <Link to="/contact" className={linkClass}>Contact</Link> {/* Changed to Link */}
+            <Link to="/TeacherProfile" className={linkClass}>Profile</Link> {/* Changed to Link */}
             {isSignedIn && (
               <button onClick={onLogout} className={`flex items-center w-full ${linkClass}`}>
                 <LogOut className="h-5 w-5 mr-1" />

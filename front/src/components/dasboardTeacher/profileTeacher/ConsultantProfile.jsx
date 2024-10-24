@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Folder, FileText, MessageSquare, Users, Clock, Briefcase, ChevronRight, Bell, Search, X } from 'lucide-react';
+import Sidebar from '../../../assestComponent/Sidebar';
 
 const ConsultantRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -63,7 +64,8 @@ const ConsultantRequests = () => {
 
   return (
     <div className='bg-gray-100 min-h-screen'>
-      <nav className="bg-white shadow-md p-4">
+      <Sidebar/>
+      {/* <nav className="bg-white shadow-md p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold text-teal-700">Consultant Dashboard</h1>
           <div className="flex items-center space-x-4">
@@ -80,7 +82,7 @@ const ConsultantRequests = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </nav> */}
 
       <div className="p-6 font-sans max-w-7xl mx-auto pt-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

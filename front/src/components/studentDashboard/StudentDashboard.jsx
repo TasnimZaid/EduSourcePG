@@ -20,7 +20,7 @@ const StudentDashboard = () => {
       <div className=" p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-">
           {/* Left column */}
-          <div className="md:col-span-1">
+          {/* <div className="md:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-800">Student Profile</h2>
@@ -62,10 +62,10 @@ const StudentDashboard = () => {
                 </li>
               </ul>
             </div>
-          </div>
+          </div> */}
 
           {/* Right column */}
-          <div className="md:col-span-3 ml-10 ">
+          <div className="md:col-span-4 m-10 ">
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Welcome back, Student!</h1>

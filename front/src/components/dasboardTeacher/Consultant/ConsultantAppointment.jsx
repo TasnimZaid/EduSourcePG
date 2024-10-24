@@ -6,6 +6,7 @@ import AppointmentFormPopup from './AppointmentFormPopup';
 import 'react-calendar/dist/Calendar.css';
 import AppointmentActions from './AppointmentActions';
 import WelcomingAppointment from './WelcomingAppointment';
+import Sidebar from '../../../assestComponent/Sidebar';
 const AppointmentForConsultant = () => {
   const [availability, setAvailability] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -103,6 +104,7 @@ const AppointmentForConsultant = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
+      <Sidebar/>
       <WelcomingAppointment />
       <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mt-8">
         <div className="p-8">

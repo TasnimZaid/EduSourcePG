@@ -166,7 +166,7 @@ const Consultants = () => {
 
   return (
     <>
-      <NavBar />
+    <NavBar/>
       <div className={`bg-[#f2f2f2] min-h-screen pt-20 ${language === 'ar' ? 'font-arabic' : 'font-english'}`}>
         <div className={`font-sans p-4 text-${language === 'ar' ? 'right' : 'left'} max-w-6xl mx-auto`}>
           <motion.div
@@ -290,7 +290,7 @@ const Consultants = () => {
           ))}
 
           <motion.button
-            className="fixed top-4 right-4 bg-white p-2 rounded-full shadow-md"
+            className="fixed top-20 right-4 bg-white p-2 rounded-full shadow-md"
             onClick={toggleLanguage}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}

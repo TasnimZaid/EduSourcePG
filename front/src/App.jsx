@@ -1,12 +1,10 @@
 // App.js
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-
 import Register from "./components/teacheLoginSignUp/Register";
 import Login from "./components/teacheLoginSignUp/Login";
 import VerifyOtp from "./components/teacheLoginSignUp/VerifyOtp";
 import SetupPassword from "./components/teacheLoginSignUp/SetupPassword";
-
 
 import RegisterS from "./components/studentLogSign/RegisterS";
 import LoginS from "./components/studentLogSign/LoginS";
@@ -24,19 +22,20 @@ import TeacherProfileInfo from "./components/dasboardTeacher/profileTeacher/Teac
 import ConsultantRequests from "./components/dasboardTeacher/profileTeacher/ConsultantProfile";
 import AppointmentForConsultant from "./components/dasboardTeacher/Consultant/ConsultantAppointment";
 
-
 import StudentDashboard from "./components/studentDashboard/StudentProfile";
 import StudentProfile from "./components/studentDashboard/StudentDashboard";
 
-
 import QuizPlatform from "./components/quizePage/QuizePAge";
-
-
 
 import Consultants from "./components/consultant.jsx/Consultants";
 import TeacherDetailPage from "./components/consultant.jsx/ConsultantDetails";
 import AppointmentforTeacher from "./components/consultant.jsx/AppointmentforTeacher";
 
+import SignInAdmin from "./adminComponent/signin";
+import SignUpAdmin from "./adminComponent/Signup";
+import AdminManagement from "./adminComponent/dashboard/AdminManagement";
+import TeacherManagement from "./adminComponent/dashboard/TeacherManegement";
+import ConsultantAvailability from "./adminComponent/dashboard/ConsultantAvailability";
 
 
 function App() {
@@ -54,8 +53,6 @@ function App() {
           <Route path="/VerifyOtpS" element={<VerifyOtpS />} />
           <Route path="/SetupPasswordS" element={<SetupPasswordS />} />
 
-
-
           <Route path="/" element={<HomePage />} />
           <Route path="/MainResourcesPage" element={<MainResourcesPage />} />
           <Route path="/DetailsResources" element={<DetailsResources />} />
@@ -63,30 +60,26 @@ function App() {
           <Route path="/ProfileExplorer" element={<ProfileExplorer />} />
           <Route path="/ConsultantRequests" element={<ConsultantRequests />} />
 
-          
-
-
           <Route path="/StudentDashboard" element={<StudentDashboard />} />
 
-          
           <Route path="/TeacherProfileInfo" element={<TeacherProfileInfo />} />
           <Route path="/TeacherProfile" element={<TeacherProfile />} />
           <Route path="/AppointmentForConsultant" element={<AppointmentForConsultant />} />
 
-          
-
-
           <Route path="/StudentProfile" element={<StudentProfile />} />
-
-          
           <Route path="/QuizPlatform" element={<QuizPlatform />} />
-
           <Route path="/Consultants" element={<Consultants />} />
           <Route path="/TeacherDetailPage/:id" element={<TeacherDetailPage />} />
-          
           <Route path="/AppointmentforTeacher" element={<AppointmentforTeacher />} />
 
+          <Route path="/SignInAdmin" element={<SignInAdmin />} />
+          <Route path="/SignUpAdmin" element={<SignUpAdmin />} />
+          <Route path="/AdminManagement" element={<AdminManagement />} />
+          <Route path="/TeacherManagement" element={<TeacherManagement />} />
+          <Route path="/ConsultantAvailability" element={<ConsultantAvailability />} />
+
           
+
           
           
 
