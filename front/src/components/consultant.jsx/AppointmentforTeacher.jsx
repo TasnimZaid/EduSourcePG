@@ -122,8 +122,8 @@ const AppointmentforTeacher = ({consultantId}) => {
   }, [availabilities, selectedDate]);
 
   return (
-    <div className="bg-gray-100 p-1 pb-7">
-      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mt-8">
+    <div className=" p-1 pb-7">
+      <div className="max-w-6xl mx-auto bg-white rounded-xl  overflow-hidden mt-8">
         <div className="p-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Available Appointments</h1>

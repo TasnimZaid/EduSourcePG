@@ -10,7 +10,7 @@ const ExperimentModal = ({ isOpen, onClose, onExperimentAdded }) => {
     video_url: '',
     is_free: false,
     subscription_price: null,
-    material_id: 1, // Replace with actual material ID
+    material_id: 24, // Replace with actual material ID
     subject: '',
     teacher_id: 2, // Replace with actual teacher ID
     grade: '',

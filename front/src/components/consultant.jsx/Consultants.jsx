@@ -167,21 +167,21 @@ const Consultants = () => {
   return (
     <>
     <NavBar/>
-      <div className={`bg-[#f2f2f2] min-h-screen pt-20 ${language === 'ar' ? 'font-arabic' : 'font-english'}`}>
-        <div className={`font-sans p-4 text-${language === 'ar' ? 'right' : 'left'} max-w-6xl mx-auto`}>
+      <div className={`bg-gray-200 min-h-screen pt-20 ${language === 'ar' ? 'font-arabic' : 'font-english'}`}>
+        <div className={`font-sans p-4 text-${language === 'ar' ? 'right' : 'left'} max-w-5xl mx-auto`}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl font-bold mb-4">{t.title}</h1>
-            <p className="mb-6 text-gray-600">{t.description}</p>
+            <h1 className="text-3xl font-bold mb-4 text-blue-800">{t.title}</h1>
+            <p className="mb-6 text-blue-600">{t.description}</p>
           </motion.div>
 
           {/* Filtering UI */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t.specialty}</label>
+              <label className="block text-sm font-medium text-blue-700 mb-1">{t.specialty}</label>
               <select
                 className="w-full p-2 border rounded-lg"
                 value={filters.specialty}
@@ -195,7 +195,7 @@ const Consultants = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t.language}</label>
+              <label className="block text-sm font-medium text-blue-700 mb-1">{t.language}</label>
               <select
                 className="w-full p-2 border rounded-lg"
                 value={filters.language}
@@ -245,7 +245,7 @@ const Consultants = () => {
           {filteredConsultants.map(consultant => (
             <motion.div
               key={consultant.id}
-              className="bg-white p-6 rounded-sm mb-4"
+              className="bg-white p-6 rounded-md mb-4 max-w-5xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 1 }}
@@ -270,12 +270,12 @@ const Consultants = () => {
                     </div>
                     <div className="space-x-2">
                       <Link to={`/TeacherDetailPage/${consultant.id}`}>
-                        <button className="bg-[#66BFBF] text-black px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
+                        <button className="bg-[#66BFBF] text-black px-4 py-2 rounded hover:bg-teal-600 transition duration-300">
                           {t.bookConsultation}
                         </button>
                       </Link>
                       <Link to={`/TeacherDetailPage/${consultant.id}`}>
-                        <button className="bg-[#FF0063] text-white px-4 py-2 rounded hover:bg-[#4d2434] transition duration-300">
+                        <button className="bg-[#0000ff] text-white px-4 py-2 rounded hover:bg-[#242a4d] transition duration-300">
                           {t.askQuestion}
                         </button>
                       </Link>

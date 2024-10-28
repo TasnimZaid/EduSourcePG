@@ -5,7 +5,6 @@ import axios from 'axios';
 import AppointmentFormPopup from './AppointmentFormPopup';
 import 'react-calendar/dist/Calendar.css';
 import AppointmentActions from './AppointmentActions';
-import WelcomingAppointment from './WelcomingAppointment';
 import Sidebar from '../../../assestComponent/Sidebar';
 const AppointmentForConsultant = () => {
   const [availability, setAvailability] = useState([]);
@@ -103,16 +102,15 @@ const AppointmentForConsultant = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
+    <div className="bg-gray-200 min-h-screen p-8">
       <Sidebar/>
-      <WelcomingAppointment />
       <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mt-8">
         <div className="p-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Manage Your Schedule</h1>
             <button
               onClick={() => setShowPopup(true)}
-              className="px-4 py-2 bg-blue-500 text-white rounded-full flex items-center hover:bg-blue-600 transition duration-300"
+              className="px-4 py-2 bg-[#2e649b] text-white rounded-md flex items-center hover:bg-[#347ec7] transition duration-300"
             >
               <Plus className="mr-2 h-5 w-5" /> Add Availability
             </button>

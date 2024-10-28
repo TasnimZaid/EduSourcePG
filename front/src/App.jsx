@@ -37,6 +37,11 @@ import AdminManagement from "./adminComponent/dashboard/AdminManagement";
 import TeacherManagement from "./adminComponent/dashboard/TeacherManegement";
 import ConsultantAvailability from "./adminComponent/dashboard/ConsultantAvailability";
 
+import AddPricingPlanForm from "./components/dasboardTeacher/Consultant/AddPricingPlanForm";
+import ConsultationRequestForm from "./components/consultant.jsx/ConsultationRequestForm ";
+import Response from "./components/dasboardTeacher/Consultant/response/Response";
+import TeacherResponses from "./components/dasboardTeacher/teacherResponseAndFeedback/TeacherResponses";
+
 
 function App() {
   return (
@@ -79,13 +84,14 @@ function App() {
           <Route path="/ConsultantAvailability" element={<ConsultantAvailability />} />
 
           
+          <Route path="/ConsultationRequestForm" element={<ConsultationRequestForm />} />
+          <Route path="/AddPricingPlanForm" element={<AddPricingPlanForm />} />
+          
+          <Route path="/Response" element={<  Response />} />
+          <Route path="/TeacherResponses" element={<  TeacherResponses />} />
 
-          
-          
 
-          
-          
-          
+ 
         </Routes>
       </div>
     </Router>
