@@ -35,10 +35,12 @@ const Response = () => {
         const response = await fetch(`http://localhost:3000/api/consultants/${consultantId}/requests`);
         const data = await response.json();
         setRequests(data);
+        console.log(data)
       } catch (error) {
         console.error("Error fetching requests:", error);
       }
     };
+    console.log(requests)
 
     fetchRequests();
   }, [consultantId]);
@@ -90,7 +92,7 @@ const Response = () => {
       case 'date':
         return new Date(b.created_at) - new Date(a.created_at);
       case 'amount':
-        return parseFloat(b.payment_amount) - parseFloat(a.payment_amount);
+        return parseFloat(b.pricing_plan_price) - parseFloat(a.pricing_plan_price);
       default:
         return 0;
     }
@@ -192,8 +194,8 @@ const Response = () => {
                     <span>{formatDate(request.created_at)}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
-                    <DollarSign className="w-4 h-4" />
-                    <span>{request.payment_amount}</span>
+                    <div className="w-4 h-4" /> JD
+                    <span>{request.pricing_plan_price}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
                     <Clock className="w-4 h-4" />

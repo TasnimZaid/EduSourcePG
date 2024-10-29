@@ -43,11 +43,11 @@ const AppointmentActions = ({ appointment, onEditSuccess, onDeleteSuccess }) => 
 
   const formatDate = (dateString) => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('ar-EG', options);
+    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   return (
-    <div className="bg-white  rounded-lg p-4 w-full max-w-md">
+    <div className="bg-white rounded-lg p-4 w-full max-w-md">
       {isEditing ? (
         <div className="space-y-4">
           <div className="flex space-x-2">
@@ -64,7 +64,7 @@ const AppointmentActions = ({ appointment, onEditSuccess, onDeleteSuccess }) => 
               value={editedAppointment.time_slot}
               onChange={handleInputChange}
               className="flex-grow border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="الوقت"
+              placeholder="Time"
             />
           </div>
           <div className="flex justify-end space-x-2">
@@ -114,14 +114,14 @@ const AppointmentActions = ({ appointment, onEditSuccess, onDeleteSuccess }) => 
       {isDeleteDialogOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg max-w-sm w-full">
-            <h3 className="text-lg font-semibold mb-4">تأكيد الحذف</h3>
-            <p className="mb-6">هل أنت متأكد أنك تريد حذف هذا الموعد؟</p>
+            <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
+            <p className="mb-6">Are you sure you want to delete this appointment?</p>
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setIsDeleteDialogOpen(false)}
                 className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
               >
-                إلغاء
+                Cancel
               </button>
               <button
                 onClick={() => {
@@ -130,7 +130,7 @@ const AppointmentActions = ({ appointment, onEditSuccess, onDeleteSuccess }) => 
                 }}
                 className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
-                حذف
+                Delete
               </button>
             </div>
           </div>

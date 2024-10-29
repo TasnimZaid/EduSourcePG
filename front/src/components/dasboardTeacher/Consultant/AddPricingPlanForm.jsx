@@ -9,7 +9,7 @@ const consultantId = storedUser;
 
 const AddPricingPlanForm = () => {
   const [formData, setFormData] = useState({
-    consultantId: '',
+    consultantId: consultantId,
     requestType: '',
     price: '',
     description: ''
@@ -26,30 +26,42 @@ const AddPricingPlanForm = () => {
     setLoading(true);
 
     try {
-      // Simulate API call - replace with actual API call if available
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Pricing Plan Added Successfully',
-        text: 'Your new pricing plan has been added.',
-        confirmButtonColor: '#3085d6',
-        timer: 2000
+      // Call the API using Fetch
+      const response = await fetch('http://localhost:3000/api/pricing-plan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
       });
 
-      // Clear form data
-      setFormData({
-        consultantId: '',
-        requestType: '',
-        price: '',
-        description: ''
-      });
+      const result = await response.json();
+
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Pricing plan added successfully',
+          text: 'The new pricing plan has been added.',
+          confirmButtonColor: '#3085d6',
+          timer: 2000
+        });
+
+        // Reset form data after adding
+        setFormData({
+          consultantId: consultantId,
+          requestType: '',
+          price: '',
+          description: ''
+        });
+      } else {
+        throw new Error(result.error || 'An error occurred while submitting the pricing plan.');
+      }
       
     } catch (error) {
       Swal.fire({
         icon: 'error',
-        title: 'Oops...',
-        text: error.message || 'There was an error submitting your pricing plan.',
+        title: 'An error occurred...',
+        text: error.message,
         confirmButtonColor: '#d33'
       });
     } finally {
@@ -59,7 +71,7 @@ const AddPricingPlanForm = () => {
 
   return (
     <div className="min-h-screen bg-gray-200 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <Sidebar/>
+      <Sidebar/>
       <div className="max-w-6xl w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
         <div className="text-center">
           <DollarSign className="mx-auto h-12 w-12 text-[#3460a6ee]" />
@@ -102,7 +114,7 @@ const AddPricingPlanForm = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 <div className="flex items-center gap-2 mb-1">
-                  <FileText className="h-4 w-4" /> Description (Optional)
+                  <FileText className="h-4 w-4" /> Description (optional)
                 </div>
                 <textarea
                   name="description"

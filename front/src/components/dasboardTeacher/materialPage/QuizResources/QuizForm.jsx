@@ -5,6 +5,10 @@ import { PlusCircle, X, BookOpen, Image, GraduationCap, FileQuestion, Check, Ale
 
 Modal.setAppElement('#root');
 
+
+const storedUser = sessionStorage.getItem('teacherId');
+const teacher_id = storedUser;
+
 const QuizForm = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [quizId, setQuizID] = useState(null);
@@ -13,7 +17,7 @@ const QuizForm = () => {
     title: '',
     quiz_img: '',
     grade: '',
-    teacher_id: '1',
+    teacher_id: teacher_id,
     material_id: '',
     subject: ''
   });

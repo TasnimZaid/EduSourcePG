@@ -34,7 +34,7 @@ const QuizPlatform = () => {
     setSaving(true);
     try {
       const response = await axios.post('http://localhost:3000/api/teachers/save-quiz', {
-        teacher_id: 1, 
+        teacher_id: 4, 
         quiz_id: selectedQuiz.quiz_id
       });
       console.log(response.data.message);

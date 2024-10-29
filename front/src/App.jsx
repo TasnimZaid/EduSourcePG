@@ -41,7 +41,7 @@ import AddPricingPlanForm from "./components/dasboardTeacher/Consultant/AddPrici
 import ConsultationRequestForm from "./components/consultant.jsx/ConsultationRequestForm ";
 import Response from "./components/dasboardTeacher/Consultant/response/Response";
 import TeacherResponses from "./components/dasboardTeacher/teacherResponseAndFeedback/TeacherResponses";
-
+import Checkout from "./assestComponent/Checkout";
 
 function App() {
   return (
@@ -89,6 +89,8 @@ function App() {
           
           <Route path="/Response" element={<  Response />} />
           <Route path="/TeacherResponses" element={<  TeacherResponses />} />
+          
+          <Route path="/Checkout" element={<  Checkout />} />
 
 
  

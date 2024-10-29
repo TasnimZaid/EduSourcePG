@@ -262,7 +262,7 @@ const LessonPlatform = () => {
             </>
           ) : (
             <div className="flex items-center justify-center h-full">
-<h2 className="text-gray-500">Select a lesson to view details</h2>
+          <h2 className="text-gray-500">Select a lesson to view details</h2>
             </div>
           )}
         </div>

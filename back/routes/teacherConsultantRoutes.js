@@ -63,6 +63,7 @@ router.get('/pricing-plans', async (req, res) => {
         res.status(500).json({ message: 'حدث خطأ أثناء جلب خطط الأسعار' });
     }
 });
+
 // إنشاء طلب استشارة من معلم إلى مستشار
 router.post('/request-consultation', async (req, res) => {
     try {
@@ -106,15 +107,25 @@ router.post('/request-consultation', async (req, res) => {
 });
 
 
-// // Route to get consultation requests for a specific consultant
+
+
+// // Route to get consultation requests for a specific consultant along with the teacher's details
 // router.get('/consultants/:consultantId/requests', async (req, res) => {
 //     const { consultantId } = req.params;
 
 //     try {
-//         const requests = await knex('consultation_requests')
-//             .select('*')
-//             .where('consultant_id', consultantId)
-//             .andWhere('isActive', true);
+//         const requests = await knex('consultation_requests as cr')
+//             .select(
+//                 'cr.*',  // Select all fields from consultation_requests
+//                 't.id as teacher_id', 
+//                 't.name as teacher_name', 
+//                 't.email as teacher_email', 
+//                 't.phone_number as teacher_phone_number', 
+//                 't.specialization as teacher_specialization'
+//             )
+//             .leftJoin('teacher as t', 'cr.teacher_id', 't.id')  // Join with teacher table
+//             .where('cr.consultant_id', consultantId)
+//             .andWhere('cr.isActive', true);
         
 //         return res.json(requests);
 //     } catch (error) {
@@ -123,24 +134,26 @@ router.post('/request-consultation', async (req, res) => {
 //     }
 // });
 
-// Route to get consultation requests for a specific consultant along with the teacher's details
+// Route to get consultation requests for a specific consultant along with the teacher's and pricing details
 router.get('/consultants/:consultantId/requests', async (req, res) => {
     const { consultantId } = req.params;
 
     try {
         const requests = await knex('consultation_requests as cr')
             .select(
-                'cr.*',  // Select all fields from consultation_requests
+                'cr.*', // Select all fields from consultation_requests
                 't.id as teacher_id', 
                 't.name as teacher_name', 
                 't.email as teacher_email', 
                 't.phone_number as teacher_phone_number', 
-                't.specialization as teacher_specialization'
+                't.specialization as teacher_specialization',
+                'pp.price as pricing_plan_price' // Add the price field from pricing_plans
             )
-            .leftJoin('teacher as t', 'cr.teacher_id', 't.id')  // Join with teacher table
+            .leftJoin('teacher as t', 'cr.teacher_id', 't.id') // Join with teacher table
+            .leftJoin('pricing_plans as pp', 'cr.pricing_plan_id', 'pp.id') // Join with pricing_plans table
             .where('cr.consultant_id', consultantId)
             .andWhere('cr.isActive', true);
-        
+
         return res.json(requests);
     } catch (error) {
         console.error('Error fetching consultation requests:', error);
@@ -149,51 +162,9 @@ router.get('/consultants/:consultantId/requests', async (req, res) => {
 });
 
 
+
 // Route to create a response to a consultation request
 
-
-// router.post('/responses', async (req, res) => {
-//     const {
-//         request_id,
-//         teacher_id,
-//         consultant_id,
-//         pdf_url,
-//         image_url,
-//         payment_status,
-//     } = req.body;
-
-//     try {
-//         // Insert the response into the responses table
-//         const responseId = await knex('responses')
-//             .insert({
-//                 request_id,
-//                 teacher_id,
-//                 consultant_id,
-//                 pdf_url,
-//                 image_url,
-//                 payment_status,
-//                 created_at: knex.fn.now(),
-//                 updated_at: knex.fn.now(),
-//             })
-//             .returning('id');
-
-//         // Update the consultation request to mark it as completed
-//               // Update the consultation request to mark it as completed
-//               const updateCount = await knex('consultation_requests')
-//               .where({ id: request_id })
-//               .update({
-//                 is_completed: true,
-//                   updated_at: knex.fn.now(),
-//               });
-  
-//           console.log("Number of rows updated in consultation_requests:", updateCount);
-
-//         return res.status(201).json({ id: responseId });
-//     } catch (error) {
-//         console.error('Error creating response and updating request status:', error);
-//         return res.status(500).json({ message: 'Internal Server Error' });
-//     }
-// });
 router.post('/responses', async (req, res) => {
     const {
         request_id,
@@ -238,21 +209,7 @@ router.post('/responses', async (req, res) => {
 });
 
 
-// Get responses for a specific teacher
-// router.get('/responses/teacher/:teacherId', async (req, res) => {
-//     try {
-//         const { teacherId } = req.params;
-//         const responses = await knex('responses')
-//             .where('teacher_id', teacherId)
-//             .andWhere('isActive', true) // Only fetch active responses
-//             .select('*');
 
-//         res.json(responses);
-//     } catch (error) {
-//         console.error('Error fetching responses:', error);
-//         res.status(500).json({ error: 'Failed to fetch responses' });
-//     }
-// });
 
 // Get responses for a specific teacher, including request details
 router.get('/responses/teacher/:teacherId', async (req, res) => {

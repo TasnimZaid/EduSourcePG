@@ -53,71 +53,131 @@ exports.getConsultantAppointments = async (req, res) => {
     }
 };
 
-
-
 exports.bookConsultantAppointment = async (req, res) => {
-    const { teacher_id, consultant_id, availability_id, notes } = req.body;
-  
-    try {
-      // Start a transaction
-      await knex.transaction(async (trx) => {
-        // 1. Update ConsultantAvailability table to mark the appointment as booked
-        const updatedAvailability = await trx('consultant_availability')
-          .where({
-            id: availability_id,
-            consultant_id: consultant_id,
-            is_available: true,
-            is_booked: false
-          })
-          .update({ is_booked: true })
-          .returning(['id', 'date', 'time_slot']);
-  
-        // Check if the slot was successfully booked
-        if (updatedAvailability.length === 0) {
-          throw new Error('Appointment slot already booked or not available.');
-        }
-  
-        // 2. Insert into Appointments table
-        const [appointment] = await trx('appointments')
-          .insert({
-            teacher_id,
-            consultant_id,
-            availability_id,
-            notes,
-            status: 'scheduled' // Assuming you want to set an initial status
-          })
-          .returning('*');
-  
-        // 3. Fetch consultant's name
-        const [consultant] = await trx('teacher')
-          .select('name')
-          .where({ id: consultant_id });
-  
-        // Prepare the response
-        const response = {
-          message: 'Consultant appointment booked successfully.',
-          appointment: {
-            ...appointment,
-            consultant_name: consultant?.name || 'Unknown',
-            date: updatedAvailability[0].date,
-            time_slot: updatedAvailability[0].time_slot
-          },
-        };
-  
-        // If we get here, no errors were thrown, so we commit the transaction
-        return response;
-      });
-  
-      // Send the response back to the client
-      return res.status(201).json(response);
-    } catch (error) {
-      console.error('Error booking consultant appointment:', error);
-      if (error.message === 'Appointment slot already booked or not available.') {
-        return res.status(400).json({ message: error.message });
+  const { teacher_id, consultant_id, availability_id, notes, num_beneficiaries, description } = req.body;
+
+  try {
+    const response = await knex.transaction(async (trx) => {
+      const updatedAvailability = await trx('consultant_availability')
+        .where({
+          id: availability_id,
+          consultant_id: consultant_id,
+          is_available: true,
+          is_booked: false
+        })
+        .update({ is_booked: true })
+        .returning(['id', 'date', 'time_slot']);
+
+      if (updatedAvailability.length === 0) {
+        throw new Error('Appointment slot already booked or not available.');
       }
-      if (error.constraint === 'appointments_teacher_id_consultant_id_availability_id_key') {
-        return res.status(400).json({ message: 'You have already booked this appointment.' });
-      }
-      return res.status(500).json({ message: 'Internal server error.' });
+
+      const [appointment] = await trx('appointments')
+        .insert({
+          teacher_id,
+          consultant_id,
+          availability_id,
+          notes,
+          num_beneficiaries,
+          description,
+          status: 'scheduled'
+        })
+        .returning('*');
+
+      const [consultant] = await trx('teacher')
+        .select('name')
+        .where({ id: consultant_id });
+
+      return {
+        message: 'Consultant appointment booked successfully.',
+        appointment: {
+          ...appointment,
+          consultant_name: consultant?.name || 'Unknown',
+          date: updatedAvailability[0].date,
+          time_slot: updatedAvailability[0].time_slot
+        },
+      };
+    });
+
+    return res.status(201).json(response);
+  } catch (error) {
+    console.error('Error booking consultant appointment:', error);
+    if (error.message === 'Appointment slot already booked or not available.') {
+      return res.status(400).json({ message: error.message });
     }
-  };
+    // Adjust constraint checking based on your schema
+    if (error.code === '23505') { // PostgreSQL unique violation error code
+      return res.status(400).json({ message: 'You have already booked this appointment.' });
+    }
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+
+
+// exports.bookConsultantAppointment = async (req, res) => {
+//     const { teacher_id, consultant_id, availability_id, notes } = req.body;
+  
+//     try {
+//       // Start a transaction
+//       await knex.transaction(async (trx) => {
+//         // 1. Update ConsultantAvailability table to mark the appointment as booked
+//         const updatedAvailability = await trx('consultant_availability')
+//           .where({
+//             id: availability_id,
+//             consultant_id: consultant_id,
+//             is_available: true,
+//             is_booked: false
+//           })
+//           .update({ is_booked: true })
+//           .returning(['id', 'date', 'time_slot']);
+  
+//         // Check if the slot was successfully booked
+//         if (updatedAvailability.length === 0) {
+//           throw new Error('Appointment slot already booked or not available.');
+//         }
+  
+//         // 2. Insert into Appointments table
+//         const [appointment] = await trx('appointments')
+//           .insert({
+//             teacher_id,
+//             consultant_id,
+//             availability_id,
+//             notes,
+//             status: 'scheduled' // Assuming you want to set an initial status
+//           })
+//           .returning('*');
+  
+//         // 3. Fetch consultant's name
+//         const [consultant] = await trx('teacher')
+//           .select('name')
+//           .where({ id: consultant_id });
+  
+//         // Prepare the response
+//         const response = {
+//           message: 'Consultant appointment booked successfully.',
+//           appointment: {
+//             ...appointment,
+//             consultant_name: consultant?.name || 'Unknown',
+//             date: updatedAvailability[0].date,
+//             time_slot: updatedAvailability[0].time_slot
+//           },
+//         };
+  
+//         // If we get here, no errors were thrown, so we commit the transaction
+//         return response;
+//       });
+  
+//       // Send the response back to the client
+//       return res.status(201).json(response);
+//     } catch (error) {
+//       console.error('Error booking consultant appointment:', error);
+//       if (error.message === 'Appointment slot already booked or not available.') {
+//         return res.status(400).json({ message: error.message });
+//       }
+//       if (error.constraint === 'appointments_teacher_id_consultant_id_availability_id_key') {
+//         return res.status(400).json({ message: 'You have already booked this appointment.' });
+//       }
+//       return res.status(500).json({ message: 'Internal server error.' });
+//     }
+//   };

@@ -11,6 +11,7 @@ const AppointmentFormPopup = ({ onClose, selectedDate }) => {
     startPeriod: 'AM',
     endPeriod: 'AM',
     isAvailable: true,
+    zoom_link: '', // إضافة zoom_link هنا
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -74,7 +75,8 @@ const AppointmentFormPopup = ({ onClose, selectedDate }) => {
         consultant_id: teacherConsultantId,
         date: formData.date,
         time_slot: timeSlot,
-        is_available: formData.isAvailable
+        is_available: formData.isAvailable,
+        zoom_link: formData.zoom_link // إضافة zoom_link هنا
       });
       onClose(response.data);
     } catch (error) {
@@ -207,26 +209,42 @@ const AppointmentFormPopup = ({ onClose, selectedDate }) => {
 
           {/* Availability Checkbox */}
           <div className="mb-4">
-            <label className="block text-gray-700">Available:</label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="isAvailable"
+                checked={formData.isAvailable}
+                onChange={handleInputChange}
+                className="mr-2"
+              />
+              Available
+            </label>
+          </div>
+
+          {/* Zoom Link Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700">Zoom Link:</label>
             <input
-              type="checkbox"
-              name="isAvailable"
-              checked={formData.isAvailable}
+              type="url"
+              name="zoom_link"
+              value={formData.zoom_link}
               onChange={handleInputChange}
-              className="p-2 border border-gray-300 rounded"
+              className="mt-1 p-2 border border-gray-300 rounded w-full"
+              placeholder="Enter Zoom link"
+              required
             />
           </div>
 
           {/* Error Message */}
-          {error && <p className="text-red-500 mb-4">{error}</p>}
+          {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
 
           {/* Submit Button */}
           <button
             type="submit"
-            className={`bg-blue-500 text-white p-2 rounded ${isLoading ? 'cursor-not-allowed opacity-50' : ''}`}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             disabled={isLoading}
           >
-            {isLoading ? 'Adding...' : 'Add Availability'}
+            {isLoading ? 'Submitting...' : 'Submit'}
           </button>
         </form>
       </div>

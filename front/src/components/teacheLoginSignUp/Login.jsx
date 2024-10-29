@@ -21,6 +21,8 @@ export default function Login() {
       sessionStorage.setItem("teacherName", teacher.name);
       sessionStorage.setItem("teacherEmail", teacher.email);
       sessionStorage.setItem("universityName", teacher.university_name);
+      sessionStorage.setItem("ٌRole", teacher.Role);
+
       
       alert(response.data.message);
       // Store the JWT token in localStorage for authentication

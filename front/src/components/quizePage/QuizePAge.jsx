@@ -9,7 +9,7 @@ const QuizPlatform = () => {
     // Fetch the quiz with questions by ID
     const fetchQuiz = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/quizzwithQ/10'); // Replace with actual quiz ID
+        const response = await axios.get('http://localhost:3000/api/quizzwithQ/1'); // Replace with actual quiz ID
         setQuiz(response.data);
       } catch (error) {
         console.error('Error fetching quiz:', error);
