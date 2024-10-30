@@ -37,9 +37,9 @@ const DetailsResources = () => {
   };
 
   return (
-    <div className="bg-[#f2f2f2] min-h-screen  pt-14 ">
+    <div className="bg-gray-200   pt-14 ">
       <NaVBar/>
-      <div className="flex max-w-[95%] mx-auto">
+      <div className="flex max-w-[95%] mx-auto h-[1000px]">
         <main className="flex-1">
           <div className="grid grid-cols-1 md:grid-cols-9 gap-0 mt-20 mx-20 ">
             <div className="md:col-span-9 overflow-auto rounded-md">

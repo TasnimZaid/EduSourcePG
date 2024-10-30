@@ -21,7 +21,7 @@ export default function Login() {
       sessionStorage.setItem("teacherName", teacher.name);
       sessionStorage.setItem("teacherEmail", teacher.email);
       sessionStorage.setItem("universityName", teacher.university_name);
-      sessionStorage.setItem("ٌRole", teacher.Role);
+      sessionStorage.setItem("ٌRole", teacher.role);
 
       
       alert(response.data.message);

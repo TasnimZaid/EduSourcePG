@@ -95,9 +95,9 @@ const QuizPlatform = () => {
               </div>
               <div className="text-sm text-[#4B5563] mb-6">By {selectedQuiz.teacher_name} | {selectedQuiz.material_name}</div>
               <div className="flex flex-wrap gap-2 mb-6">
-                <button className="bg-[#10B981] text-white px-4 py-2 rounded-md hover:bg-[#059669] transition-colors duration-200 flex items-center">
+                {/* <button className="bg-[#10B981] text-white px-4 py-2 rounded-md hover:bg-[#059669] transition-colors duration-200 flex items-center">
                   <Play size={18} className="mr-2" /> Play
-                </button>
+                </button> */}
                 <button 
                   className="border border-[#D1D5DB] text-[#374151] px-4 py-2 rounded-md flex items-center hover:bg-[#F3F4F6] transition-colors duration-200"
                   onClick={saveQuiz}
@@ -112,9 +112,9 @@ const QuizPlatform = () => {
                 >
                   Assign to Class
                 </button>
-                <button className="border border-[#D1D5DB] text-[#374151] p-2 rounded-md hover:bg-[#F3F4F6] transition-colors duration-200">
+                {/* <button className="border border-[#D1D5DB] text-[#374151] p-2 rounded-md hover:bg-[#F3F4F6] transition-colors duration-200">
                   <MoreHorizontal size={18} />
-                </button>
+                </button> */}
               </div>
 
               <div className="mt-8">

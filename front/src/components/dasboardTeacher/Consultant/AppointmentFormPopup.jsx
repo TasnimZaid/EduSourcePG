@@ -11,7 +11,7 @@ const AppointmentFormPopup = ({ onClose, selectedDate }) => {
     startPeriod: 'AM',
     endPeriod: 'AM',
     isAvailable: true,
-    zoom_link: '', // إضافة zoom_link هنا
+    zoom_link: '', 
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +47,13 @@ const AppointmentFormPopup = ({ onClose, selectedDate }) => {
     return startTime !== endTime && startHour && startMinute && endHour && endMinute;
   };
 
+  const validateDate = () => {
+    const selectedDate = new Date(formData.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time for comparison
+    return selectedDate >= today; // Check if selected date is today or in the future
+  };
+
   const formatTimeSlot = () => {
     const { startHour, startMinute, endHour, endMinute, startPeriod, endPeriod } = formData;
     return `${startHour}:${startMinute}${startPeriod}-${endHour}:${endMinute}${endPeriod}`;
@@ -57,6 +64,11 @@ const AppointmentFormPopup = ({ onClose, selectedDate }) => {
 
     if (!validateTimeSlot()) {
       setError('Please enter a valid time slot');
+      return;
+    }
+
+    if (!validateDate()) {
+      setError('Please select a date that is today or later');
       return;
     }
 
@@ -102,6 +114,7 @@ const AppointmentFormPopup = ({ onClose, selectedDate }) => {
               onChange={handleInputChange}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
               required
+              min={new Date().toISOString().split('T')[0]} // Set minimum date to today
             />
           </div>
 

@@ -7,7 +7,7 @@ const upload = require('./../config/multer-config')
 // Route for handling image uploads
 
 router.post(
-    "/teacherprofile/:id/image",
+    "/ /:id/image",
     upload.single('image'), // Use single() for one file, or fields() for multiple
     teacherProfileController.imageTeacherProfile
   );

@@ -8,15 +8,18 @@ const AppointmentforTeacher = ({consultantId}) => {
   const [availabilities, setAvailabilities] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [showPaypal, setShowPaypal] = useState(false);
+  const [selectedAvailability, setSelectedAvailability] = useState(null);
   const [bookingData, setBookingData] = useState({
     notes: '',
     num_beneficiaries: '',
     description: ''
   });
+  
   const storedUser = sessionStorage.getItem('teacherId');
   const userObject = JSON.parse(storedUser);
   const teacherId = storedUser;
-  console.log(teacherId)
+  const amount = '10.00'; // Set your appointment cost here
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,15 +45,106 @@ const AppointmentforTeacher = ({consultantId}) => {
       setAvailabilities([]);
     }
   }, [consultantId]);
-  
 
   useEffect(() => {
     fetchMonthAvailabilities(currentDate);
   }, [fetchMonthAvailabilities, currentDate]);
 
+  // PayPal Script Loading
+  useEffect(() => {
+    if (showPaypal) {
+      const script = document.createElement('script');
+      script.src = "https://www.paypal.com/sdk/js?client-id=AYnzVEObmnyuNDN4FBPKSqinCbKh7UwO3m5qeUkH6R6wknTw0ECuqp63tmy714ZzsyutrUTHELbmbD9W&currency=USD";
+      script.async = true;
+      script.onload = () => {
+        window.paypal.Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: amount,
+                },
+              }],
+            });
+          },
+          onApprove: async (data, actions) => {
+            const details = await actions.order.capture();
+            handlePayPalSuccess(details);
+          },
+          onError: (err) => {
+            console.error('PayPal Checkout onError', err);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Payment failed. Please try again.',
+              icon: 'error',
+              confirmButtonColor: '#115e59'
+            });
+          },
+        }).render('#paypal-button-container');
+      };
+
+      document.body.appendChild(script);
+
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+  }, [showPaypal]);
+
+  const handlePayPalSuccess = async (details) => {
+    try {
+      // First, process the successful payment
+      console.log('Payment successful:', details);
+      
+      // Then, proceed with booking the appointment
+      const response = await axios.post('http://localhost:3000/api/book', {
+        teacher_id: teacherId,
+        consultant_id: consultantId,
+        availability_id: selectedAvailability.id,
+        notes: bookingData.notes,
+        num_beneficiaries: parseInt(bookingData.num_beneficiaries),
+        description: bookingData.description,
+        payment_details: details // Include payment details if your API needs them
+      });
+
+      if (response.status === 201) {
+        const { appointment } = response.data;
+        
+        const updatedAvailabilities = availabilities.map(avail =>
+          avail.id === selectedAvailability.id ? { ...avail, is_booked: true } : avail
+        );
+        setAvailabilities(updatedAvailabilities);
+
+        // Reset states
+        setBookingData({
+          notes: '',
+          num_beneficiaries: '',
+          description: ''
+        });
+        setShowPaypal(false);
+        setSelectedAvailability(null);
+
+        Swal.fire({
+          title: 'Success!',
+          text: `Appointment booked and payment processed successfully! Appointment ID: ${appointment.id}`,
+          icon: 'success',
+          confirmButtonColor: '#115e59'
+        });
+      }
+    } catch (error) {
+      console.error('Error processing booking:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Payment was successful but booking failed. Please contact support.',
+        icon: 'error',
+        confirmButtonColor: '#115e59'
+      });
+    }
+  };
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    console.log("Selected Date (onClick):", format(date, 'yyyy-MM-dd'));
+    setShowPaypal(false);
   };
 
   const changeMonth = (increment) => {
@@ -89,70 +183,9 @@ const AppointmentforTeacher = ({consultantId}) => {
     return classes;
   }, [availabilities, currentDate, selectedDate]);
 
-  const bookAppointment = async (availability) => {
-    try {
-      const response = await axios.post('http://localhost:3000/api/book', {
-        teacher_id: teacherId,
-        consultant_id: consultantId,
-        availability_id: availability.id,
-        notes: bookingData.notes,
-        num_beneficiaries: parseInt(bookingData.num_beneficiaries),
-        description: bookingData.description
-      });
-
-      if (response.status === 201) {
-        const { appointment } = response.data;
-        console.log(appointment);
-
-        const updatedAvailabilities = availabilities.map(avail =>
-          avail.id === availability.id ? { ...avail, is_booked: true } : avail
-        );
-        setAvailabilities(updatedAvailabilities);
-
-        // Reset booking form
-        setBookingData({
-          notes: '',
-          num_beneficiaries: '',
-          description: ''
-        });
-
-        // Show SweetAlert2 success message
-        Swal.fire({
-          title: 'Success!',
-          text: `Appointment booked successfully! Appointment ID: ${appointment.id}`,
-          icon: 'success',
-          confirmButtonColor: '#115e59',
-          confirmButtonText: 'OK'
-        });
-      }
-    } catch (error) {
-      console.error('Error booking appointment:', error);
-      if (error.response) {
-        Swal.fire({
-          title: 'Error!',
-          text: `Failed to book appointment: ${error.response.data.message}`,
-          icon: 'error',
-          confirmButtonColor: '#115e59',
-          confirmButtonText: 'OK'
-        });
-      } else if (error.request) {
-        Swal.fire({
-          title: 'Error!',
-          text: 'No response received from server. Please try again later.',
-          icon: 'error',
-          confirmButtonColor: '#115e59',
-          confirmButtonText: 'OK'
-        });
-      } else {
-        Swal.fire({
-          title: 'Error!',
-          text: 'An error occurred while booking the appointment. Please try again.',
-          icon: 'error',
-          confirmButtonColor: '#115e59',
-          confirmButtonText: 'OK'
-        });
-      }
-    }
+  const initiateBooking = (availability) => {
+    setSelectedAvailability(availability);
+    setShowPaypal(true);
   };
 
   const getAvailabilitiesForSelectedDate = useCallback(() => {
@@ -202,7 +235,9 @@ const AppointmentforTeacher = ({consultantId}) => {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">Appointments for {format(selectedDate, 'MMMM d, yyyy')}</h2>
+              <h2 className="text-xl font-semibold mb-4 text-gray-700">
+                Appointments for {format(selectedDate, 'MMMM d, yyyy')}
+              </h2>
               <ul className="space-y-4">
                 {getAvailabilitiesForSelectedDate().length > 0 ? (
                   getAvailabilitiesForSelectedDate().map((availability) => (
@@ -216,7 +251,9 @@ const AppointmentforTeacher = ({consultantId}) => {
                         {!availability.is_booked && (
                           <div className="mt-4 space-y-3">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700">Number of Beneficiaries</label>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Number of Beneficiaries
+                              </label>
                               <input
                                 type="number"
                                 name="num_beneficiaries"
@@ -229,7 +266,9 @@ const AppointmentforTeacher = ({consultantId}) => {
                             </div>
                             
                             <div>
-                              <label className="block text-sm font-medium text-gray-700">Description</label>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Description
+                              </label>
                               <textarea
                                 name="description"
                                 value={bookingData.description}
@@ -241,7 +280,9 @@ const AppointmentforTeacher = ({consultantId}) => {
                             </div>
 
                             <div>
-                              <label className="block text-sm font-medium text-gray-700">Notes</label>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Notes
+                              </label>
                               <textarea
                                 name="notes"
                                 value={bookingData.notes}
@@ -250,13 +291,20 @@ const AppointmentforTeacher = ({consultantId}) => {
                                 rows="2"
                               />
                             </div>
-                            <button 
-                              onClick={() => bookAppointment(availability)}
-                              className="w-full bg-teal-900 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
-                            >
-                              Book Appointment
-                            </button>
-                            
+
+                            {!showPaypal || selectedAvailability?.id !== availability.id ? (
+                              <button 
+                                onClick={() => initiateBooking(availability)}
+                                className="w-full bg-teal-900 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                              >
+                                Book Appointment (${amount})
+                              </button>
+                            ) : (
+                              <div>
+                                <p className="text-center mb-4">Total Amount: ${amount}</p>
+                                <div id="paypal-button-container"></div>
+                              </div>
+                            )}
                           </div>
                         )}
                         
@@ -264,7 +312,6 @@ const AppointmentforTeacher = ({consultantId}) => {
                           <p className="mt-2 text-red-600 font-semibold">Booked</p>
                         )}
                       </div>
-                      
                     </li>
                   ))
                 ) : (

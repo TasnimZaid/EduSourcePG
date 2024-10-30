@@ -68,8 +68,7 @@ const FeaturesSection = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-4xl md:text-5xl font-bold text-center mb-16 text-blue-900 font-shadows"
         >
-          Shop with Purpose
-        </motion.h2>
+Empower Your Teaching Journey        </motion.h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <motion.div

@@ -10,7 +10,7 @@ const TeacherQuizzes = ({ teacherId }) => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/1/getQuizzesForTeacher`);
+        const response = await axios.get(`http://localhost:3000/api/4/getQuizzesForTeacher`);
         
         // Remove duplicate quizzes based on quiz_name
         const uniqueQuizzes = response.data.quizzes.reduce((acc, current) => {

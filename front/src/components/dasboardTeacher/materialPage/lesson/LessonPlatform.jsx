@@ -96,7 +96,7 @@ const LessonPlatform = () => {
                   className="bg-[#0B698B] text-white px-4 py-2 rounded-md hover:bg-[#0396A6] transition-colors duration-200 flex items-center"
                   onClick={() => handleStartLesson(selectedLesson)}
                 >
-                  <Play size={18} className="mr-2" /> Start Lesson
+                  <Play size={18} className="mr-2" /> Details Lesson
                 </button>
                 {selectedLesson.pdf_url && (
                   <button 
@@ -138,9 +138,7 @@ const LessonPlatform = () => {
                     <File size={18} className="mr-2" /> Open Other File
                   </button>
                 )}
-                <button className="border border-[#D1D5DB] text-[#374151] p-2 rounded-md hover:bg-[#F3F4F6] transition-colors duration-200">
-                  <MoreHorizontal size={18} />
-                </button>
+               
               </div>
 
               <div className="mt-8">

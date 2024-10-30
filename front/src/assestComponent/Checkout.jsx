@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 function Checkout() {
-  const amount = '92.00'; // Adjust this to your total amount
+  const amount = '10.00'; // Adjust this to your total amount
 
   const handlePayPalSuccess = async (details) => {
     alert('Transaction completed by ' + details.payer.name.given_name);
