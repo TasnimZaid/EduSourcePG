@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const LessonModal = ({ isOpen, onClose, onAddLesson }) => {
+const LessonModal = ({ isOpen, onClose, onLessonAdded }) => {
+
+  const storedUser = sessionStorage.getItem('teacherId');
+const teacher_id = storedUser;
   const [lessonData, setLessonData] = useState({
     title: '',
     description: '',
@@ -12,9 +15,9 @@ const LessonModal = ({ isOpen, onClose, onAddLesson }) => {
     other_file_url: '',
     is_free: false,
     subscription_price: null,
-    material_id: 1, // Replace with actual material ID
+    material_id: 24, // Replace with actual material ID
     subject: '',
-    teacher_id: 2, // Replace with actual teacher ID
+    teacher_id: teacher_id, // Replace with actual teacher ID
     grade: '', // Add grade here
   });
 
@@ -30,7 +33,7 @@ const LessonModal = ({ isOpen, onClose, onAddLesson }) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3000/api/addLesson', lessonData);
-      onAddLesson(response.data);
+      onLessonAdded(response.data);
       onClose(); // Close modal after adding lesson
     } catch (error) {
       console.error('Error adding lesson:', error);

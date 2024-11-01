@@ -21,6 +21,9 @@ exports.up = function(knex) {
             table.foreign('availability_id').references('id').inTable('consultant_availability').onDelete('CASCADE');
             table.enum('status', ['scheduled', 'completed', 'cancelled']).defaultTo('scheduled');
             table.text('notes');
+            table.text('description').nullable(); // New field for description
+            table.integer('num_beneficiaries').nullable();
+            table.string('zoom_link').nullable(); // New field for Zoom link
             table.boolean('is_deleted').defaultTo(false);
             table.unique(['teacher_id', 'consultant_id', 'availability_id']);
         });

@@ -1,10 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, User, LogOut } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom';
+import logo from "../assestComponent/Colorful Abstract Brain Illustrative Technology Ai Logo.png";
 
-const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40", onLogout = () => {}, isHomePage = false }) => {
+const NavBar = ({ onLogout = () => {}, isHomePage = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
+
+  useEffect(() => {
+    // Retrieve session data on component mount
+    const token = sessionStorage.getItem("token");
+    const teacherName = sessionStorage.getItem("teacherName");
+    const profilePic = sessionStorage.getItem("profilePicture");
+
+    if (token && teacherName) {
+      setIsSignedIn(true);
+      setUserName(teacherName);
+      setProfilePicture(profilePic || '');
+    }
+  }, []);
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setIsSignedIn(false);
+    setUserName('');
+    onLogout();
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,7 +39,6 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Updated to `text-lg` for larger font size
   const linkClass = `hover:text-blue-700 px-3 py-2 rounded-md text-lg font-medium transition-colors duration-200 ${
     isScrolled ? 'text-black' : 'text-black'
   }`;
@@ -28,30 +51,41 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              {/* Updated to `text-2xl` for a larger logo text */}
-              <span className={`text-2xl font-semibold ${isScrolled ? 'text-black' : 'text-black'}`}>EduSource</span>
+              <span className={`text-2xl font-semibold ${isScrolled ? 'text-black' : 'text-black'}`}>
+              <Link to="/" className={linkClass}>
+              <img src={logo} alt="" className='w-14 h-14 inline pt-1' /></Link>
+                
+              </span>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                <Link to="/" className={linkClass}>Home</Link> {/* Changed to Link */}
-                <Link to="/Consultants" className={linkClass}>Consultant</Link> {/* Changed to Link */}
-                <Link to="/MainResourcesPage" className={linkClass}>Main</Link> {/* Changed to Link */}
-                <Link to="/DetailsResources" className={linkClass}>Services</Link> {/* Changed to Link */}
-                <Link to="/TeacherProfile" className={linkClass}>profile</Link> {/* Changed to Link */}
+                <Link to="/" className={linkClass}>Home</Link>
+                <Link to="/Consultants" className={linkClass}>Consultant</Link>
+                <Link to="/MainResourcesPage" className={linkClass}>Main</Link>
+                <Link to="/DetailsResources" className={linkClass}>Services</Link>
+                <Link to="/TeacherProfile" className={linkClass}>Profile</Link>
               </div>
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
             {isSignedIn ? (
-              <>
-                <img className="h-8 w-8 rounded-full" src={profilePicture} alt="Profile" />
-                <button onClick={onLogout} className={`flex items-center ${linkClass}`}>
-                  <LogOut className="h-5 w-5 mr-1 bg-black" />
+              <div className="flex items-center space-x-2">
+                {profilePicture ? (
+                  <img className="h-8 w-8 rounded-full" src={profilePicture} alt="Profile" />
+                ) : (
+                  <User className="h-8 w-8 text-gray-500" />
+                )}
+                <span className="text-lg font-medium">{` ${userName}`}</span>
+                <button onClick={handleLogout} className={`flex items-center ${linkClass}`}>
+                  <LogOut className="h-5 w-5 mr-1" />
                   Logout
                 </button>
-              </>
+              </div>
             ) : (
-              <User className={`h-6 w-6 ${isScrolled ? 'text-black' : 'text-black'}`} />
+              <Link to="/login" className={`${linkClass} flex items-center`}>
+                <User className="h-6 w-6 mr-2" />
+                Login
+              </Link>
             )}
           </div>
           <div className="-mr-2 flex md:hidden">
@@ -78,15 +112,21 @@ const NavBar = ({ isSignedIn = false, profilePicture = "/api/placeholder/40/40",
       {isOpen && (
         <div className="md:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link to="/" className={linkClass}>Home</Link> {/* Changed to Link */}
-            <Link to="/about" className={linkClass}>About</Link> {/* Changed to Link */}
-            <Link to="/services" className={linkClass}>Services</Link> {/* Changed to Link */}
-            <Link to="/TeacherProfile" className={linkClass}>Profile</Link> {/* Changed to Link */}
-            {isSignedIn && (
-              <button onClick={onLogout} className={`flex items-center w-full ${linkClass}`}>
+            <Link to="/" className={linkClass}>Home</Link>
+            <Link to="/Consultants" className={linkClass}>Consultant</Link>
+            <Link to="/MainResourcesPage" className={linkClass}>Main</Link>
+            <Link to="/DetailsResources" className={linkClass}>Services</Link>
+            <Link to="/TeacherProfile" className={linkClass}>Profile</Link>
+            {isSignedIn ? (
+              <button onClick={handleLogout} className={`flex items-center w-full ${linkClass}`}>
                 <LogOut className="h-5 w-5 mr-1" />
                 Logout
               </button>
+            ) : (
+              <Link to="/login" className={`${linkClass} flex items-center`}>
+                <User className="h-5 w-5 mr-1" />
+                Login
+              </Link>
             )}
           </div>
         </div>

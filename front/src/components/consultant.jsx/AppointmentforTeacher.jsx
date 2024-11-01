@@ -2,17 +2,33 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, parseISO } from 'date-fns';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const AppointmentforTeacher = ({consultantId}) => {
   const [availabilities, setAvailabilities] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  const [showPaypal, setShowPaypal] = useState(false);
+  const [selectedAvailability, setSelectedAvailability] = useState(null);
+  const [bookingData, setBookingData] = useState({
+    notes: '',
+    num_beneficiaries: '',
+    description: ''
+  });
+  
   const storedUser = sessionStorage.getItem('teacherId');
   const userObject = JSON.parse(storedUser);
   const teacherId = storedUser;
+  const amount = '10.00'; // Set your appointment cost here
 
-  // Fetch availabilities for the entire month
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setBookingData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const fetchMonthAvailabilities = useCallback(async (date) => {
     try {
       const startDate = format(startOfMonth(date), 'yyyy-MM-dd');
@@ -24,7 +40,6 @@ const AppointmentforTeacher = ({consultantId}) => {
 
       const availabilitiesArray = Array.isArray(response.data) ? response.data : [];
       setAvailabilities(availabilitiesArray);
-      console.log(availabilitiesArray); // Log all fetched availabilities
     } catch (error) {
       console.error('Error fetching availabilities:', error);
       setAvailabilities([]);
@@ -35,27 +50,115 @@ const AppointmentforTeacher = ({consultantId}) => {
     fetchMonthAvailabilities(currentDate);
   }, [fetchMonthAvailabilities, currentDate]);
 
-  // Handle date change from the calendar
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    console.log("Selected Date (onClick):", format(date, 'yyyy-MM-dd'));
+  // PayPal Script Loading
+  useEffect(() => {
+    if (showPaypal) {
+      const script = document.createElement('script');
+      script.src = "https://www.paypal.com/sdk/js?client-id=AYnzVEObmnyuNDN4FBPKSqinCbKh7UwO3m5qeUkH6R6wknTw0ECuqp63tmy714ZzsyutrUTHELbmbD9W&currency=USD";
+      script.async = true;
+      script.onload = () => {
+        window.paypal.Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: amount,
+                },
+              }],
+            });
+          },
+          onApprove: async (data, actions) => {
+            const details = await actions.order.capture();
+            handlePayPalSuccess(details);
+          },
+          onError: (err) => {
+            console.error('PayPal Checkout onError', err);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Payment failed. Please try again.',
+              icon: 'error',
+              confirmButtonColor: '#115e59'
+            });
+          },
+        }).render('#paypal-button-container');
+      };
+
+      document.body.appendChild(script);
+
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+  }, [showPaypal]);
+
+  const handlePayPalSuccess = async (details) => {
+    try {
+      // First, process the successful payment
+      console.log('Payment successful:', details);
+      
+      // Then, proceed with booking the appointment
+      const response = await axios.post('http://localhost:3000/api/book', {
+        teacher_id: teacherId,
+        consultant_id: consultantId,
+        availability_id: selectedAvailability.id,
+        notes: bookingData.notes,
+        num_beneficiaries: parseInt(bookingData.num_beneficiaries),
+        description: bookingData.description,
+        payment_details: details // Include payment details if your API needs them
+      });
+
+      if (response.status === 201) {
+        const { appointment } = response.data;
+        
+        const updatedAvailabilities = availabilities.map(avail =>
+          avail.id === selectedAvailability.id ? { ...avail, is_booked: true } : avail
+        );
+        setAvailabilities(updatedAvailabilities);
+
+        // Reset states
+        setBookingData({
+          notes: '',
+          num_beneficiaries: '',
+          description: ''
+        });
+        setShowPaypal(false);
+        setSelectedAvailability(null);
+
+        Swal.fire({
+          title: 'Success!',
+          text: `Appointment booked and payment processed successfully! Appointment ID: ${appointment.id}`,
+          icon: 'success',
+          confirmButtonColor: '#115e59'
+        });
+      }
+    } catch (error) {
+      console.error('Error processing booking:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Payment was successful but booking failed. Please contact support.',
+        icon: 'error',
+        confirmButtonColor: '#115e59'
+      });
+    }
   };
 
-  // Change the current month
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setShowPaypal(false);
+  };
+
   const changeMonth = (increment) => {
     const newDate = increment ? addMonths(currentDate, 1) : subMonths(currentDate, 1);
     setCurrentDate(newDate);
     fetchMonthAvailabilities(newDate);
   };
 
-  // Get all days in the current month for the calendar
   const getDaysInMonth = () => {
     const start = startOfMonth(currentDate);
     const end = endOfMonth(currentDate);
     return eachDayOfInterval({ start, end });
   };
 
-  // Determine the CSS classes for each day in the calendar
   const getDayClass = useCallback((day) => {
     let classes = "w-8 h-8 rounded-full flex items-center justify-center";
     if (!isSameMonth(day, currentDate)) classes += " text-gray-300";
@@ -71,50 +174,20 @@ const AppointmentforTeacher = ({consultantId}) => {
       const allBooked = dayAvailabilities.every(avail => avail.is_booked);
 
       if (allBooked) {
-        classes += " bg-red-300"; // All appointments are booked
+        classes += " bg-red-300";
       } else if (hasAvailable) {
-        classes += " bg-yellow-300"; // There are available appointments
+        classes += " bg-yellow-300";
       }
     }
 
     return classes;
   }, [availabilities, currentDate, selectedDate]);
 
-  // Book an appointment for the teacher
-  const bookAppointment = async (availability) => {
-    try {
-      const response = await axios.post('http://localhost:3000/api/book', {
-        teacher_id: teacherId, // Replace with actual teacher ID
-        consultant_id: consultantId, 
-        availability_id: availability.id,
-        notes: "Booked via web interface"
-      });
-
-      if (response.status === 201) {
-        const { appointment } = response.data;
-        console.log(appointment);
-
-        // Update the local state to reflect the booking
-        const updatedAvailabilities = availabilities.map(avail =>
-          avail.id === availability.id ? { ...avail, is_booked: true } : avail
-        );
-        setAvailabilities(updatedAvailabilities);
-
-        alert(`Appointment booked successfully! Appointment ID: ${appointment.id}`);
-      }
-    } catch (error) {
-      console.error('Error booking appointment:', error);
-      if (error.response) {
-        alert(`Failed to book appointment: ${error.response.data.message}`);
-      } else if (error.request) {
-        alert('No response received from server. Please try again later.');
-      } else {
-        alert('An error occurred while booking the appointment. Please try again.');
-      }
-    }
+  const initiateBooking = (availability) => {
+    setSelectedAvailability(availability);
+    setShowPaypal(true);
   };
 
-  // Get availabilities for the selected date
   const getAvailabilitiesForSelectedDate = useCallback(() => {
     return availabilities.filter(avail => 
       isSameDay(parseISO(avail.date), selectedDate)
@@ -122,8 +195,8 @@ const AppointmentforTeacher = ({consultantId}) => {
   }, [availabilities, selectedDate]);
 
   return (
-    <div className="bg-gray-100 p-1 pb-7">
-      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mt-8">
+    <div className="p-1 pb-7">
+      <div className="max-w-6xl mx-auto bg-white rounded-xl overflow-hidden mt-8">
         <div className="p-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Available Appointments</h1>
@@ -162,7 +235,9 @@ const AppointmentforTeacher = ({consultantId}) => {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">Appointments for {format(selectedDate, 'MMMM d, yyyy')}</h2>
+              <h2 className="text-xl font-semibold mb-4 text-gray-700">
+                Appointments for {format(selectedDate, 'MMMM d, yyyy')}
+              </h2>
               <ul className="space-y-4">
                 {getAvailabilitiesForSelectedDate().length > 0 ? (
                   getAvailabilitiesForSelectedDate().map((availability) => (
@@ -172,14 +247,67 @@ const AppointmentforTeacher = ({consultantId}) => {
                           {format(parseISO(availability.date), 'MMMM d, yyyy')} at {availability.time_slot}
                         </h3>
                         <p className="text-sm text-gray-600">Consultant ID: {consultantId}</p>
+                        
                         {!availability.is_booked && (
-                          <button 
-                            onClick={() => bookAppointment(availability)}
-                            className="mt-2 bg-teal-900 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
-                          >
-                            Book Appointment
-                          </button>
+                          <div className="mt-4 space-y-3">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Number of Beneficiaries
+                              </label>
+                              <input
+                                type="number"
+                                name="num_beneficiaries"
+                                value={bookingData.num_beneficiaries}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                min="1"
+                                required
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Description
+                              </label>
+                              <textarea
+                                name="description"
+                                value={bookingData.description}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                rows="2"
+                                required
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Notes
+                              </label>
+                              <textarea
+                                name="notes"
+                                value={bookingData.notes}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                rows="2"
+                              />
+                            </div>
+
+                            {!showPaypal || selectedAvailability?.id !== availability.id ? (
+                              <button 
+                                onClick={() => initiateBooking(availability)}
+                                className="w-full bg-teal-900 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                              >
+                                Book Appointment (${amount})
+                              </button>
+                            ) : (
+                              <div>
+                                <p className="text-center mb-4">Total Amount: ${amount}</p>
+                                <div id="paypal-button-container"></div>
+                              </div>
+                            )}
+                          </div>
                         )}
+                        
                         {availability.is_booked && (
                           <p className="mt-2 text-red-600 font-semibold">Booked</p>
                         )}

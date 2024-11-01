@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const ExperimentModal = ({ isOpen, onClose, onExperimentAdded }) => {
+  const storedUser = sessionStorage.getItem('teacherId');
+  const teacher_id = storedUser;
   const [experimentData, setExperimentData] = useState({
     title: '',
     description: '',
@@ -10,9 +12,9 @@ const ExperimentModal = ({ isOpen, onClose, onExperimentAdded }) => {
     video_url: '',
     is_free: false,
     subscription_price: null,
-    material_id: 1, // Replace with actual material ID
+    material_id: 24, // Replace with actual material ID
     subject: '',
-    teacher_id: 2, // Replace with actual teacher ID
+    teacher_id: teacher_id, // Replace with actual teacher ID
     grade: '',
   });
 

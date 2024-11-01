@@ -38,9 +38,6 @@ exports.up = function(knex) {
                 'Literature'
             ]).notNullable(); 
             table.timestamps(true, true); 
-            table.integer('request_id').unsigned().nullable() // إضافة request_id
-            .references('id').inTable('consultation_requests') // الربط بجدول الطلبات
-            .onDelete('SET NULL'); // إذا تم حذف الطلب، يتم تعيينه إلى NULL
             table.integer('duration').nullable(); // مدة الامتحان
             table.integer('total_marks').nullable(); // العلامات الكلية
             table.string('pdf_url').nullable(); // رابط ملف PDF

@@ -2,17 +2,41 @@
 const knex = require('../knex-config');
 
 const addConsultantAvailability = async (req, res) => {
-  const { consultant_id, date, time_slot, is_available } = req.body;
+  const { consultant_id, date, time_slot, is_available, zoom_link } = req.body; // Include zoom_link
 
   try {
     const [result] = await knex('consultant_availability')
-      .insert({ consultant_id, date, time_slot, is_available })
+      .insert({ consultant_id, date, time_slot, is_available, zoom_link }) // Save zoom_link
       .returning('*');
+      
     res.status(201).json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+// const getConsultantAvailability = async (req, res) => {
+//   const consultantId = req.params.consultantId;
+//   const { date } = req.query;
+
+//   if (!consultantId) {
+//     return res.status(400).json({ error: 'consultant_id is required' });
+//   }
+
+//   try {
+//     let query = knex('consultant_availability')
+//       .where({ consultant_id: consultantId, is_deleted: false });
+
+//     if (date) {
+//       query = query.andWhere({ date });
+//     }
+
+//     const result = await query.select('*');
+//     res.status(200).json(result);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 
 const getConsultantAvailability = async (req, res) => {
   const consultantId = req.params.consultantId;
@@ -23,14 +47,16 @@ const getConsultantAvailability = async (req, res) => {
   }
 
   try {
-    let query = knex('consultant_availability')
-      .where({ consultant_id: consultantId, is_deleted: false });
+    let query = knex('consultant_availability as ca')
+      .leftJoin('appointments as a', 'ca.id', 'a.availability_id') // Join with appointments
+      .where({ 'ca.consultant_id': consultantId, 'ca.is_deleted': false })
+      .select('ca.*', 'a.notes', 'a.num_beneficiaries') // Select required fields
 
     if (date) {
-      query = query.andWhere({ date });
+      query = query.andWhere({ 'ca.date': date });
     }
 
-    const result = await query.select('*');
+    const result = await query;
     res.status(200).json(result);
   } catch (err) {
     console.error(err);

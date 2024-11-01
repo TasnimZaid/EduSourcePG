@@ -9,7 +9,7 @@ const AddQuizToClass = ({ quizId, onClose }) => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/1/getTeacherClasses'); // Replace with your API endpoint
+        const response = await axios.get('http://localhost:3000/api/4/getTeacherClasses'); 
         setClasses(response.data);
       } catch (error) {
         console.error("Error fetching classes:", error);
